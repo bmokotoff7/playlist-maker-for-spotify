@@ -1,9 +1,55 @@
 const spotifyLoginBtn = document.getElementById('spotify-login-btn')
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 
-// Request User Authorization
 const clientId = '26504850eab146ce841f5b9f1c03db49'
 const redirectUri = 'http://127.0.0.1:5500'
+
+function onPageLoad() {
+    if (window.location.search.length > 0) {
+        handleRedirect()
+    }
+}
+
+function handleRedirect() {
+    let code = getCode()
+    requestAccessToken(code)
+    window.history.pushState('', '', redirectUri)
+}
+
+function requestAccessToken(code) {
+    let body = new URLSearchParams({
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: redirectUri,
+        client_id: clientId,
+        code_verifier: localStorage.getItem('code_verifier')
+    })
+    const response = fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP status ' + response.status)
+            }
+            return response.json()
+        })
+        .then(data => {
+            localStorage.setItem('access_token', data.access_token)
+            getProfile()
+        })
+        .catch(error => {
+            console.error('Error: ', error)
+        })
+}
+
+function getCode() {
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.get('code')
+}
 
 function requestUserAuthorization() {
     let codeVerifier = generateRandomString(128)
@@ -27,42 +73,6 @@ function requestUserAuthorization() {
         window.location = 'https://accounts.spotify.com/authorize?' + args
     })
 }
-
-const urlParams = new URLSearchParams(window.location.search)
-let code = urlParams.get('code')
-
-// Request Access Token
-
-let codeVerifier = localStorage.getItem('code_verifier')
-
-let body = new URLSearchParams({
-    grant_type: 'authorization_code',
-    code: code,
-    redirect_uri: redirectUri,
-    client_id: clientId,
-    code_verifier: codeVerifier
-})
-
-const response = fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: body
-})
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('HTTP status ' + response.status)
-        }
-        return response.json()
-    })
-    .then(data => {
-        localStorage.setItem('access_token', data.access_token)
-        getProfile()
-    })
-    .catch(error => {
-        console.error('Error: ', error)
-    })
 
 // Code Verifier
 function generateRandomString(length) {
