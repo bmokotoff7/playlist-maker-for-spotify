@@ -1,6 +1,8 @@
 const spotifyLoginBtn = document.getElementById('spotify-login-btn')
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 
+const welcomeMessage = document.getElementById('welcome-message')
+
 const clientId = '26504850eab146ce841f5b9f1c03db49'
 const redirectUri = 'http://127.0.0.1:5500'
 
@@ -12,6 +14,7 @@ function onPageLoad() {
 
 function handleRedirect() {
     let code = getCode()
+    console.log('Code: ', code)
     requestAccessToken(code)
     window.history.pushState('', '', redirectUri)
 }
@@ -48,7 +51,8 @@ function requestAccessToken(code) {
 
 function getCode() {
     const urlParams = new URLSearchParams(window.location.search)
-    return urlParams.get('code')
+    let code = urlParams.get('code')
+    return code
 }
 
 function requestUserAuthorization() {
@@ -101,7 +105,7 @@ async function generateCodeChallenge(codeVerifier) {
     return base64encode(digest)
 }
 
-// Get User Profile
+// Get User Profile, and display a welcome message to the user
 async function getProfile() {
     let accessToken = localStorage.getItem('access_token')
     
@@ -111,6 +115,6 @@ async function getProfile() {
         }
     })
 
-    const data = await response.json()
-    console.log(data)
+    const userData = await response.json()
+    welcomeMessage.textContent = `Welcome, ${userData.display_name}`
 }
