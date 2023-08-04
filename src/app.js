@@ -14,7 +14,6 @@ function onPageLoad() {
 
 function handleRedirect() {
     let code = getCode()
-    console.log('Code: ', code)
     requestAccessToken(code)
     window.history.pushState('', '', redirectUri)
 }
@@ -42,6 +41,7 @@ function requestAccessToken(code) {
         })
         .then(data => {
             localStorage.setItem('access_token', data.access_token)
+            localStorage.setItem('refresh_token', data.refresh_token)
             getProfile()
         })
         .catch(error => {
