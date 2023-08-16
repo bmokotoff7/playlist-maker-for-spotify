@@ -162,7 +162,10 @@ function handleCurrentUserProfileResponse() {
         const data = JSON.parse(this.responseText)
         console.log(data)
         userID = data.id
+        spotifyLoginBtn.classList.add('hidden')
         welcomeMessageEl.textContent = `Welcome, ${userID}`
+        welcomeMessageEl.classList.remove('hidden')
+        getPlaylistsBtn.classList.remove('hidden')
     }
     else if (this.status === 401) {
         refreshAccessToken()
@@ -173,10 +176,12 @@ function handleCurrentUserProfileResponse() {
     }
 }
 
+// Makes the API call to get the current user's playlists.
 function getCurrentUserPlaylists() {
     callAPI('GET', PLAYLISTS, true, false, null, handleCurrentUserPlaylistsResponse)
 }
 
+// Handles the API response from a call to getCurrentUserPlaylists()
 function handleCurrentUserPlaylistsResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
