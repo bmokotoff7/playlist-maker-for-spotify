@@ -5,18 +5,19 @@ const getPlaylistsBtn = document.getElementById('get-playlists-btn')
 
 // Event Listeners
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
-// getPlaylistsBtn.addEventListener('click', getUserPlaylists)
+getPlaylistsBtn.addEventListener('click', getCurrentUserPlaylists)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
 const redirectUri = 'http://127.0.0.1:5500'
-let access_token = null
-let refresh_token = null
-let user_id = null
+let accessToken = null
+let refreshToken = null
+let userID = null
 
 // API URLs
 const AUTHORIZE = 'https://accounts.spotify.com/authorize'
 const ME = 'https://api.spotify.com/v1/me'
+const PLAYLISTS = 'https://api.spotify.com/v1/me/playlists'
 const TOKEN = 'https://accounts.spotify.com/api/token'
 
 function onPageLoad() {
@@ -45,7 +46,7 @@ function requestAccessToken(code) {
 function refreshAccessToken() {
     let body = ''
     body += 'grant_type=refresh_token'
-    body += `&refresh_token=${refresh_token}`
+    body += `&refresh_token=${refreshToken}`
     body += `&client_id=${clientId}`
 
     callAuthorizationAPI(body)
@@ -64,12 +65,12 @@ function handleAuthorizationResponse() {
         const data = JSON.parse(this.responseText)
         console.log(data)
         if (data.access_token != undefined) {
-            access_token = data.access_token
-            localStorage.setItem('access_token', access_token)
+            accessToken = data.access_token
+            localStorage.setItem('access_token', accessToken)
         } 
         if (data.refresh_token != undefined) {
-            refresh_token = data.refresh_token
-            localStorage.setItem('refresh_token', refresh_token)
+            refreshToken = data.refresh_token
+            localStorage.setItem('refresh_token', refreshToken)
         }
         // onPageLoad()
         getCurrentUserProfile()
@@ -136,11 +137,12 @@ async function generateCodeChallenge(codeVerifier) {
 }
 
 // API Functions
+// Generic function used to make all API requests.
 function callAPI(method, url, authorizationHeader, contentTypeHeader, body, callback) {
     let xhr = new XMLHttpRequest()
     xhr.open(method, url, true)
     if (authorizationHeader) {
-        xhr.setRequestHeader('Authorization', `Bearer ${access_token}`)
+        xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
     }
     if (contentTypeHeader) {
         xhr.setRequestHeader('Content-Type', 'application/json')
@@ -149,16 +151,40 @@ function callAPI(method, url, authorizationHeader, contentTypeHeader, body, call
     xhr.onload = callback
 }
 
+// Makes the API call to get the current user's profile.
 function getCurrentUserProfile() {
     callAPI('GET', ME, true, false, null, handleCurrentUserProfileResponse)
 }
 
+// Handles the API response from a call to getCurrentUserProfile()
 function handleCurrentUserProfileResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
         console.log(data)
-        user_id = data.id
-        welcomeMessageEl.textContent = `Welcome, ${user_id}`
+        userID = data.id
+        welcomeMessageEl.textContent = `Welcome, ${userID}`
+    }
+    else if (this.status === 401) {
+        refreshAccessToken()
+    }
+    else {
+        console.log(this.responseText)
+        alert(this.responseText)
+    }
+}
+
+function getCurrentUserPlaylists() {
+    callAPI('GET', PLAYLISTS, true, false, null, handleCurrentUserPlaylistsResponse)
+}
+
+function handleCurrentUserPlaylistsResponse() {
+    if (this.status === 200) {
+        const data = JSON.parse(this.responseText)
+        const playlists = data.items
+        // console.log(playlists)
+        playlists.forEach(function(playlist) {
+            console.log(playlist.name)
+        })
     }
     else if (this.status === 401) {
         refreshAccessToken()
