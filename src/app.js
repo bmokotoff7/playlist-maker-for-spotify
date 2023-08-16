@@ -5,7 +5,7 @@ const getPlaylistsBtn = document.getElementById('get-playlists-btn')
 
 // Event Listeners
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
-getPlaylistsBtn.addEventListener('click', getCurrentUserPlaylists)
+getPlaylistsBtn.addEventListener('click', getUserPlaylists)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -17,8 +17,8 @@ let userID = null
 // API URLs
 const AUTHORIZE = 'https://accounts.spotify.com/authorize'
 const ME = 'https://api.spotify.com/v1/me'
-const PLAYLISTS = 'https://api.spotify.com/v1/me/playlists'
 const TOKEN = 'https://accounts.spotify.com/api/token'
+
 
 function onPageLoad() {
     if (window.location.search.length > 0) {
@@ -91,7 +91,12 @@ function requestUserAuthorization() {
     let codeVerifier = generateRandomString(128)
     generateCodeChallenge(codeVerifier).then(codeChallenge => {
         let state = generateRandomString(16)
-        let scope = 'user-read-private user-read-email'
+        let scope = `
+            user-read-private 
+            user-read-email 
+            playlist-read-private 
+            playlist-read-collaborative
+        `
 
         localStorage.setItem('code_verifier', codeVerifier)
 
@@ -101,7 +106,7 @@ function requestUserAuthorization() {
         url += `&redirect_uri=${redirectUri}`
         url += `&state=${state}`
         url += `&scope=${scope}`
-        url += `&show_dialog=true`
+        url += `&show_dialog=false` // true = requires authorization every time you log in
         url += `&code_challenge_method=S256`
         url += `&code_challenge=${codeChallenge}`
 
@@ -176,13 +181,18 @@ function handleCurrentUserProfileResponse() {
     }
 }
 
-// Makes the API call to get the current user's playlists.
-function getCurrentUserPlaylists() {
-    callAPI('GET', PLAYLISTS, true, false, null, handleCurrentUserPlaylistsResponse)
+let playlistOffset = 0
+// Makes the API call to get the user's playlists.
+function getUserPlaylists() {
+    playlistOffset = 0
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    url += '?limit=50'
+    url += `&offset=${playlistOffset}`
+    callAPI('GET', url, true, false, null, handleUserPlaylistsResponse)
 }
 
 // Handles the API response from a call to getCurrentUserPlaylists()
-function handleCurrentUserPlaylistsResponse() {
+function handleUserPlaylistsResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
         const playlists = data.items
@@ -190,6 +200,13 @@ function handleCurrentUserPlaylistsResponse() {
         playlists.forEach(function(playlist) {
             console.log(playlist.name)
         })
+        if (playlists.length === 50) {
+            playlistOffset += 50
+            let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+            url += '?limit=50'
+            url += `&offset=${playlistOffset}`
+            callAPI('GET', url, true, false, null, handleUserPlaylistsResponse)
+        }
     }
     else if (this.status === 401) {
         refreshAccessToken()
