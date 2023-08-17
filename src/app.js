@@ -3,11 +3,13 @@ const spotifyLoginBtn = document.getElementById('spotify-login-btn')
 const welcomeMessageEl = document.getElementById('welcome-message')
 const getPlaylistsBtn = document.getElementById('get-playlists-btn')
 const createPlaylistBtn = document.getElementById('create-playlist-btn')
+const getTopItemsBtn = document.getElementById('get-top-items-btn')
 
 // Event Listeners
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 getPlaylistsBtn.addEventListener('click', getUserPlaylists)
 createPlaylistBtn.addEventListener('click', createPlaylist)
+getTopItemsBtn.addEventListener('click', getUserTopItems)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -100,6 +102,7 @@ function requestUserAuthorization() {
             playlist-read-collaborative
             playlist-modify-public
             playlist-modify-private
+            user-top-read
         `
 
         localStorage.setItem('code_verifier', codeVerifier)
@@ -176,6 +179,7 @@ function handleCurrentUserProfileResponse() {
         welcomeMessageEl.classList.remove('hidden')
         getPlaylistsBtn.classList.remove('hidden')
         createPlaylistBtn.classList.remove('hidden')
+        getTopItemsBtn.classList.remove('hidden')
     }
     else if (this.status === 401) {
         refreshAccessToken()
@@ -238,6 +242,38 @@ function createPlaylist() {
 // Handles the API response from a call to createPlaylist().
 function handleCreatePlaylistResponse() {
     if (this.status === 201) {
+        const data = JSON.parse(this.responseText)
+        console.log(data)
+    }
+    else if (this.status === 401) {
+        refreshAccessToken()
+    }
+    else {
+        console.log(this.responseText)
+        alert(this.responseText)
+    }
+}
+
+// Makes the API call to access a user's top items
+// type: 'artists', 'tracks'
+// timeRange: 'short_term', 'medium_term' (default), 'long_term'
+// limit: 1-50 (default 20)
+// offset: default 0
+function getUserTopItems() {
+    let type = 'tracks'
+    let timeRange = 'long_term'
+    let limit = 5
+    let offset = 0
+
+    let url = `https://api.spotify.com/v1/me/top/${type}`
+    url += `?time_range=${timeRange}`
+    url += `&limit=${limit}`
+    url += `&offset=${offset}`
+    callAPI('GET', url, true, false, null, handleGetUserTopItemsResponse)
+}
+
+function handleGetUserTopItemsResponse() {
+    if (this.status === 200) {
         const data = JSON.parse(this.responseText)
         console.log(data)
     }
