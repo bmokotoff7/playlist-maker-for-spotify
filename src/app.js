@@ -2,10 +2,12 @@
 const spotifyLoginBtn = document.getElementById('spotify-login-btn')
 const welcomeMessageEl = document.getElementById('welcome-message')
 const getPlaylistsBtn = document.getElementById('get-playlists-btn')
+const createPlaylistBtn = document.getElementById('create-playlist-btn')
 
 // Event Listeners
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 getPlaylistsBtn.addEventListener('click', getUserPlaylists)
+createPlaylistBtn.addEventListener('click', createPlaylist)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -63,7 +65,7 @@ function callAuthorizationAPI(body) {
 function handleAuthorizationResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
-        console.log(data)
+        // console.log(data)
         if (data.access_token != undefined) {
             accessToken = data.access_token
             localStorage.setItem('access_token', accessToken)
@@ -96,6 +98,8 @@ function requestUserAuthorization() {
             user-read-email 
             playlist-read-private 
             playlist-read-collaborative
+            playlist-modify-public
+            playlist-modify-private
         `
 
         localStorage.setItem('code_verifier', codeVerifier)
@@ -106,7 +110,7 @@ function requestUserAuthorization() {
         url += `&redirect_uri=${redirectUri}`
         url += `&state=${state}`
         url += `&scope=${scope}`
-        url += `&show_dialog=false` // true = requires authorization every time you log in
+        url += `&show_dialog=true` // true = requires authorization every time you log in
         url += `&code_challenge_method=S256`
         url += `&code_challenge=${codeChallenge}`
 
@@ -161,16 +165,17 @@ function getCurrentUserProfile() {
     callAPI('GET', ME, true, false, null, handleCurrentUserProfileResponse)
 }
 
-// Handles the API response from a call to getCurrentUserProfile()
+// Handles the API response from a call to getCurrentUserProfile().
 function handleCurrentUserProfileResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
-        console.log(data)
+        // console.log(data)
         userID = data.id
         spotifyLoginBtn.classList.add('hidden')
         welcomeMessageEl.textContent = `Welcome, ${userID}`
         welcomeMessageEl.classList.remove('hidden')
         getPlaylistsBtn.classList.remove('hidden')
+        createPlaylistBtn.classList.remove('hidden')
     }
     else if (this.status === 401) {
         refreshAccessToken()
@@ -191,7 +196,7 @@ function getUserPlaylists() {
     callAPI('GET', url, true, false, null, handleUserPlaylistsResponse)
 }
 
-// Handles the API response from a call to getCurrentUserPlaylists()
+// Handles the API response from a call to getCurrentUserPlaylists().
 function handleUserPlaylistsResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
@@ -207,6 +212,34 @@ function handleUserPlaylistsResponse() {
             url += `&offset=${playlistOffset}`
             callAPI('GET', url, true, false, null, handleUserPlaylistsResponse)
         }
+    }
+    else if (this.status === 401) {
+        refreshAccessToken()
+    }
+    else {
+        console.log(this.responseText)
+        alert(this.responseText)
+    }
+}
+
+// Makes the API call to create a new playlist for a user.
+// TO-DO: accept body as parameters entered by the user (set default values if nothing is entered for optional fields)
+function createPlaylist() {
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    let body = `{
+        "name": "New Playlist",
+        "description": "Created by Playlist Maker for Spotify",
+        "public": false 
+    }`
+    // Note: Even though "public" is set to false, the playlist still appears as public. Look into this.
+    callAPI('POST', url, true, true, body, handleCreatePlaylistResponse)
+}
+
+// Handles the API response from a call to createPlaylist().
+function handleCreatePlaylistResponse() {
+    if (this.status === 201) {
+        const data = JSON.parse(this.responseText)
+        console.log(data)
     }
     else if (this.status === 401) {
         refreshAccessToken()
