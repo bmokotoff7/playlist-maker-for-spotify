@@ -4,12 +4,14 @@ const welcomeMessageEl = document.getElementById('welcome-message')
 const getPlaylistsBtn = document.getElementById('get-playlists-btn')
 const createPlaylistBtn = document.getElementById('create-playlist-btn')
 const getTopItemsBtn = document.getElementById('get-top-items-btn')
+const searchBtn = document.getElementById('search-btn')
 
 // Event Listeners
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 getPlaylistsBtn.addEventListener('click', getUserPlaylists)
 createPlaylistBtn.addEventListener('click', createPlaylist)
 getTopItemsBtn.addEventListener('click', getUserTopItems)
+searchBtn.addEventListener('click', searchForArtists)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -21,6 +23,7 @@ let userID = null
 // API URLs
 const AUTHORIZE = 'https://accounts.spotify.com/authorize'
 const ME = 'https://api.spotify.com/v1/me'
+const SEARCH = 'https://api.spotify.com/v1/search'
 const TOKEN = 'https://accounts.spotify.com/api/token'
 
 
@@ -180,6 +183,7 @@ function handleCurrentUserProfileResponse() {
         getPlaylistsBtn.classList.remove('hidden')
         createPlaylistBtn.classList.remove('hidden')
         getTopItemsBtn.classList.remove('hidden')
+        searchBtn.classList.remove('hidden')
     }
     else if (this.status === 401) {
         refreshAccessToken()
@@ -273,6 +277,37 @@ function getUserTopItems() {
 }
 
 function handleGetUserTopItemsResponse() {
+    if (this.status === 200) {
+        const data = JSON.parse(this.responseText)
+        console.log(data)
+    }
+    else if (this.status === 401) {
+        refreshAccessToken()
+    }
+    else {
+        console.log(this.responseText)
+        alert(this.responseText)
+    }
+}
+
+function searchForArtists() {
+    let query = ''
+    let type = 'artist'
+    let market = 'US'
+    let limit = 10
+    let offset = 0
+
+    let url = SEARCH
+    url += `?q=${query}`
+    url += `&type=${type}`
+    url += `&market=${market}`
+    url += `&limit=${limit}`
+    url += `&offset=${offset}`
+
+    callAPI('GET', url, true, false, null, handleSearchForArtistsResponse)
+}
+
+function handleSearchForArtistsResponse() {
     if (this.status === 200) {
         const data = JSON.parse(this.responseText)
         console.log(data)
