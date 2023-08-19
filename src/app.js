@@ -8,10 +8,10 @@ const searchBtn = document.getElementById('search-btn')
 
 // Event Listeners
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
-getPlaylistsBtn.addEventListener('click', getUserPlaylists)
-createPlaylistBtn.addEventListener('click', createPlaylist)
-getTopItemsBtn.addEventListener('click', getUserTopItems)
-searchBtn.addEventListener('click', searchForArtists)
+getPlaylistsBtn.addEventListener('click', getUserPlaylistsCall)
+createPlaylistBtn.addEventListener('click', createPlaylistCall)
+getTopItemsBtn.addEventListener('click', getTopItemsCall)
+searchBtn.addEventListener('click', searchForArtistsCall)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -80,7 +80,7 @@ function handleAuthorizationResponse() {
             localStorage.setItem('refresh_token', refreshToken)
         }
         // onPageLoad()
-        getCurrentUserProfile()
+        getCurrentUserProfileCall()
     }
     else {
         console.log(this.responseText)
@@ -152,8 +152,21 @@ async function generateCodeChallenge(codeVerifier) {
 }
 
 // API Functions
-// Generic function used to make all API requests.
-function callAPI(method, url, authorizationHeader, contentTypeHeader, body, callback) {
+// function callAPI(method, url, authorizationHeader, contentTypeHeader, body, callback) {
+//     let xhr = new XMLHttpRequest()
+//     xhr.open(method, url, true)
+//     if (authorizationHeader) {
+//         xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`)
+//     }
+//     if (contentTypeHeader) {
+//         xhr.setRequestHeader('Content-Type', 'application/json')
+//     }
+//     xhr.send(body)
+//     xhr.onload = callback
+// }
+
+// Generic function used to make all API requests and handle API responses.
+function callAPI(method, url, authorizationHeader, contentTypeHeader, body, callback, successCode) {
     let xhr = new XMLHttpRequest()
     xhr.open(method, url, true)
     if (authorizationHeader) {
@@ -163,107 +176,27 @@ function callAPI(method, url, authorizationHeader, contentTypeHeader, body, call
         xhr.setRequestHeader('Content-Type', 'application/json')
     }
     xhr.send(body)
-    xhr.onload = callback
-}
-
-// Makes the API call to get the current user's profile.
-function getCurrentUserProfile() {
-    callAPI('GET', ME, true, false, null, handleCurrentUserProfileResponse)
-}
-
-// Handles the API response from a call to getCurrentUserProfile().
-function handleCurrentUserProfileResponse() {
-    if (this.status === 200) {
-        const data = JSON.parse(this.responseText)
-        // console.log(data)
-        userID = data.id
-        spotifyLoginBtn.classList.add('hidden')
-        welcomeMessageEl.textContent = `Welcome, ${userID}`
-        welcomeMessageEl.classList.remove('hidden')
-        getPlaylistsBtn.classList.remove('hidden')
-        createPlaylistBtn.classList.remove('hidden')
-        getTopItemsBtn.classList.remove('hidden')
-        searchBtn.classList.remove('hidden')
-    }
-    else if (this.status === 401) {
-        refreshAccessToken()
-    }
-    else {
-        console.log(this.responseText)
-        alert(this.responseText)
-    }
-}
-
-let playlistOffset = 0
-// Makes the API call to get the user's playlists.
-function getUserPlaylists() {
-    playlistOffset = 0
-    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
-    url += '?limit=50'
-    url += `&offset=${playlistOffset}`
-    callAPI('GET', url, true, false, null, handleUserPlaylistsResponse)
-}
-
-// Handles the API response from a call to getCurrentUserPlaylists().
-function handleUserPlaylistsResponse() {
-    if (this.status === 200) {
-        const data = JSON.parse(this.responseText)
-        const playlists = data.items
-        // console.log(playlists)
-        playlists.forEach(function(playlist) {
-            console.log(playlist.name)
-        })
-        if (playlists.length === 50) {
-            playlistOffset += 50
-            let url = `https://api.spotify.com/v1/users/${userID}/playlists`
-            url += '?limit=50'
-            url += `&offset=${playlistOffset}`
-            callAPI('GET', url, true, false, null, handleUserPlaylistsResponse)
+    xhr.onload = function() {
+        if (this.status === successCode) {
+            const data = JSON.parse(this.responseText)
+            callback(data)
+        }
+        else if (this.status === 401) {
+            refreshAccessToken()
+        }
+        else {
+            console.log(this.responseText)
+            alert(this.responseText)
         }
     }
-    else if (this.status === 401) {
-        refreshAccessToken()
-    }
-    else {
-        console.log(this.responseText)
-        alert(this.responseText)
-    }
 }
 
-// Makes the API call to create a new playlist for a user.
-// TO-DO: accept body as parameters entered by the user (set default values if nothing is entered for optional fields)
-function createPlaylist() {
-    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
-    let body = `{
-        "name": "New Playlist",
-        "description": "Created by Playlist Maker for Spotify",
-        "public": false 
-    }`
-    // Note: Even though "public" is set to false, the playlist still appears as public. Look into this.
-    callAPI('POST', url, true, true, body, handleCreatePlaylistResponse)
-}
-
-// Handles the API response from a call to createPlaylist().
-function handleCreatePlaylistResponse() {
-    if (this.status === 201) {
-        const data = JSON.parse(this.responseText)
-        console.log(data)
-    }
-    else if (this.status === 401) {
-        refreshAccessToken()
-    }
-    else {
-        console.log(this.responseText)
-        alert(this.responseText)
-    }
-}
-
-// Makes the API call to access a user's top items
+// Makes the API call to access a user's top items.
 // type: 'artists', 'tracks'
 // timeRange: 'short_term', 'medium_term' (default), 'long_term'
 // limit: 1-50 (default 20)
 // offset: default 0
-function getUserTopItems() {
+function getTopItemsCall() {
     let type = 'tracks'
     let timeRange = 'long_term'
     let limit = 5
@@ -273,25 +206,79 @@ function getUserTopItems() {
     url += `?time_range=${timeRange}`
     url += `&limit=${limit}`
     url += `&offset=${offset}`
-    callAPI('GET', url, true, false, null, handleGetUserTopItemsResponse)
+    callAPI('GET', url, true, false, null, getTopItemsResponse, 200)
 }
 
-function handleGetUserTopItemsResponse() {
-    if (this.status === 200) {
-        const data = JSON.parse(this.responseText)
-        console.log(data)
-    }
-    else if (this.status === 401) {
-        refreshAccessToken()
-    }
-    else {
-        console.log(this.responseText)
-        alert(this.responseText)
+// Handles the API response from getTopItemsCall().
+function getTopItemsResponse(data) {
+    console.log(data)
+}
+
+// Makes the API call to get the current user's profile.
+function getCurrentUserProfileCall() {
+    callAPI('GET', ME, true, false, null, getCurrentUserProfileResponse, 200)
+}
+
+// Handles the API response from getCurrentUserProfileCall().
+function getCurrentUserProfileResponse(data) {
+    userID = data.id
+    spotifyLoginBtn.classList.add('hidden')
+    welcomeMessageEl.textContent = `Welcome, ${userID}`
+    welcomeMessageEl.classList.remove('hidden')
+    getPlaylistsBtn.classList.remove('hidden')
+    createPlaylistBtn.classList.remove('hidden')
+    getTopItemsBtn.classList.remove('hidden')
+    searchBtn.classList.remove('hidden')
+}
+
+let playlistOffset = 0
+// Makes the API call to get the user's playlists.
+function getUserPlaylistsCall() {
+    playlistOffset = 0
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    url += '?limit=50'
+    url += `&offset=${playlistOffset}`
+    callAPI('GET', url, true, false, null, getUserPlaylistsResponse, 200)
+}
+
+// Handles the API response from getCurrentUserPlaylistsCall().
+function getUserPlaylistsResponse(data) {
+    const playlists = data.items
+    // console.log(playlists)
+    playlists.forEach(function(playlist) {
+        console.log(playlist.name)
+    })
+    if (playlists.length === 50) {
+        playlistOffset += 50
+        let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+        url += '?limit=50'
+        url += `&offset=${playlistOffset}`
+        callAPI('GET', url, true, false, null, getUserPlaylistsResponse, 200)
     }
 }
 
-function searchForArtists() {
-    let query = ''
+// Makes the API call to create a new playlist for a user.
+// TO-DO: accept body as parameters entered by the user (set default values if nothing is entered for optional fields)
+function createPlaylistCall() {
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    let body = `{
+        "name": "New Playlist",
+        "description": "Created by Playlist Maker for Spotify",
+        "public": false 
+    }`
+    // Note: Even though "public" is set to false, the playlist still appears as public. Look into this.
+    callAPI('POST', url, true, true, body, createPlaylistResponse, 201)
+}
+
+// Handles the API response from createPlaylistCall().
+function createPlaylistResponse(data) {
+    const playlistName = data.name
+    console.log(`"${playlistName}" created.`)
+}
+
+// Makes the API call to search for an artist.
+function searchForArtistsCall() {
+    let query = 'jay'
     let type = 'artist'
     let market = 'US'
     let limit = 10
@@ -304,19 +291,10 @@ function searchForArtists() {
     url += `&limit=${limit}`
     url += `&offset=${offset}`
 
-    callAPI('GET', url, true, false, null, handleSearchForArtistsResponse)
+    callAPI('GET', url, true, false, null, searchForArtistsResponse, 200)
 }
 
-function handleSearchForArtistsResponse() {
-    if (this.status === 200) {
-        const data = JSON.parse(this.responseText)
-        console.log(data)
-    }
-    else if (this.status === 401) {
-        refreshAccessToken()
-    }
-    else {
-        console.log(this.responseText)
-        alert(this.responseText)
-    }
+// Handles the API response from searchForArtistsCall().
+function searchForArtistsResponse(data) {
+    console.log(data)
 }
