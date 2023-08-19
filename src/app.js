@@ -2,14 +2,23 @@
 const spotifyLoginBtn = document.getElementById('spotify-login-btn')
 const welcomeMessageEl = document.getElementById('welcome-message')
 const getPlaylistsBtn = document.getElementById('get-playlists-btn')
-const createPlaylistBtn = document.getElementById('create-playlist-btn')
 const getTopItemsBtn = document.getElementById('get-top-items-btn')
 const searchBtn = document.getElementById('search-btn')
 
-// Event Listeners
+// Event Listener(s)
+document.addEventListener('click', function(e) {
+    if (e.target.id === 'create-playlist-tab-btn') {
+        showCreatePlaylistSection()
+    }
+    else if (e.target.id === 'create-playlist-btn') {
+        const name = document.querySelector('#playlist-name').value
+        const description = document.querySelector('#playlist-description').value
+        createPlaylistCall(name, description)
+    }
+})
+
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 getPlaylistsBtn.addEventListener('click', getUserPlaylistsCall)
-createPlaylistBtn.addEventListener('click', createPlaylistCall)
 getTopItemsBtn.addEventListener('click', getTopItemsCall)
 searchBtn.addEventListener('click', searchForArtistsCall)
 
@@ -223,12 +232,8 @@ function getCurrentUserProfileCall() {
 function getCurrentUserProfileResponse(data) {
     userID = data.id
     spotifyLoginBtn.classList.add('hidden')
-    welcomeMessageEl.textContent = `Welcome, ${userID}`
-    welcomeMessageEl.classList.remove('hidden')
-    getPlaylistsBtn.classList.remove('hidden')
-    createPlaylistBtn.classList.remove('hidden')
-    getTopItemsBtn.classList.remove('hidden')
-    searchBtn.classList.remove('hidden')
+    document.querySelector('#welcome-message').textContent = `Welcome, ${userID}`
+    document.querySelector('main').classList.remove('hidden')
 }
 
 let playlistOffset = 0
@@ -259,11 +264,17 @@ function getUserPlaylistsResponse(data) {
 
 // Makes the API call to create a new playlist for a user.
 // TO-DO: accept body as parameters entered by the user (set default values if nothing is entered for optional fields)
-function createPlaylistCall() {
+function createPlaylistCall(name, description) {
     let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    if (name === '') {
+        name = 'New Playlist'
+    }
+    if (description === '') {
+        description = 'Created by Playlist Maker for Spotify'
+    }
     let body = `{
-        "name": "New Playlist",
-        "description": "Created by Playlist Maker for Spotify",
+        "name": "${name}",
+        "description": "${description}",
         "public": false 
     }`
     // Note: Even though "public" is set to false, the playlist still appears as public. Look into this.
@@ -297,4 +308,10 @@ function searchForArtistsCall() {
 // Handles the API response from searchForArtistsCall().
 function searchForArtistsResponse(data) {
     console.log(data)
+}
+
+// Styling/Layout Related Functions
+function showCreatePlaylistSection() {
+    document.querySelector('.create-playlist-section').classList.remove('hidden')
+    document.querySelector('#create-playlist-tab-btn').classList.add('hidden')
 }

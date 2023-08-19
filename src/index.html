@@ -4,13 +4,27 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body onload="onPageLoad()">
-        <button id="spotify-login-btn">Login to Spotify</button>
-        <div class="welcome-div">
-            <h2 class="hidden" id="welcome-message"></h2>
-            <button class="hidden" id="get-playlists-btn">Get Playlists</button>
-            <button class="hidden" id="create-playlist-btn">Create Playlist</button>
-            <button class="hidden" id="get-top-items-btn">Get Top Items</button>
-            <button class="hidden" id="search-btn">Search</button>
+
+        <section class="login">
+            <button id="spotify-login-btn">Login to Spotify</button>
+        </section>
+    
+        <main class="hidden">
+            <h2 class="" id="welcome-message"></h2>
+
+            <button class="" id="get-playlists-btn">Get Playlists</button>
+            
+            <button class="" id="create-playlist-tab-btn">Create Playlist</button>
+            <section class="create-playlist-section hidden">
+                <input type="text" id="playlist-name" placeholder="Name">
+                <input type="text" id="playlist-description" placeholder="Description">
+                <button class="" id="create-playlist-btn">Create Playlist</button>
+            </section>
+
+            <button class="" id="get-top-items-btn">Get Top Items</button>
+            
+            <button class="" id="search-btn">Search</button>
+        </main>
 
         </div>
         <script src="app.js"></script>

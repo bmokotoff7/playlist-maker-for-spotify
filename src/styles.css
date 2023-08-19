@@ -1,4 +1,27 @@
-/* Utility Classes */
+/* --- LAYOUT --- */
+body {
+    text-align: center;
+}
+
+main, 
+.create-playlist-section {
+    display: flex;
+    flex-direction: column;
+}
+
+main button,
+.create-playlist-section input {
+    width: auto;
+    margin: 1em auto;
+}
+
+/* --- TYPOGRAPHY --- */
+
+/* --- LAYOUT --- */
+
+
+/* --- UTILITY CLASSES --- */
 .hidden {
     display: none;
 }
+
