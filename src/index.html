@@ -23,7 +23,32 @@
 
             <button class="" id="get-top-items-btn">Get Top Items</button>
             
-            <button class="" id="search-btn">Search</button>
+            <button class="" id="search-tab-btn">Search</button>
+            <section class="search-section hidden">
+                <div class="search-radios">
+                    <div>
+                        <input type="radio" name="search-radio" id="album-radio" value="album" checked>
+                        <label for="album-radio">Album</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="search-radio" id="artist-radio" value="artist">
+                        <label for="artist-radio">Artist</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="search-radio" id="playlist-radio" value="playlist">
+                        <label for="playlist-radio">Playlist</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="search-radio" id="track-radio" value="track">
+                        <label for="track-radio">Track</label>
+                    </div>
+                    <input type="text" id="search-terms" placeholder="Enter search terms...">
+                </div>
+                <button class="" id="search-btn">Submit Search</button>
+                <ol class="search-results">
+                    
+                </ol>
+            </section>
         </main>
 
         </div>

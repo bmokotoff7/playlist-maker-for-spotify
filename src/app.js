@@ -3,7 +3,6 @@ const spotifyLoginBtn = document.getElementById('spotify-login-btn')
 const welcomeMessageEl = document.getElementById('welcome-message')
 const getPlaylistsBtn = document.getElementById('get-playlists-btn')
 const getTopItemsBtn = document.getElementById('get-top-items-btn')
-const searchBtn = document.getElementById('search-btn')
 
 // Event Listener(s)
 document.addEventListener('click', function(e) {
@@ -15,12 +14,27 @@ document.addEventListener('click', function(e) {
         const description = document.querySelector('#playlist-description').value
         createPlaylistCall(name, description)
     }
+
+    else if (e.target.id === 'search-tab-btn') {
+        showSearchSection()
+    }
+
+    else if (e.target.id === 'search-btn') {
+        const radios = document.getElementsByName('search-radio')
+        let selectedRadio = null
+        for (let radio of radios) {
+            if (radio.checked) {
+                selectedRadio = radio.value
+            }
+        }
+        console.log(selectedRadio)
+        searchCall(selectedRadio, document.querySelector('#search-terms').value)
+    }
 })
 
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
 getPlaylistsBtn.addEventListener('click', getUserPlaylistsCall)
 getTopItemsBtn.addEventListener('click', getTopItemsCall)
-searchBtn.addEventListener('click', searchForArtistsCall)
 
 // Authorization and User Data
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -160,6 +174,15 @@ async function generateCodeChallenge(codeVerifier) {
     return base64encode(digest)
 }
 
+// Program-Specific Functions
+function createArtistPlaylist() {
+    // get artist
+    // get artist's albums
+    // user selects albums or selects all albums
+    // create new empty playlist
+    // get each album's songs and add to playlist
+}
+
 // API Functions
 // function callAPI(method, url, authorizationHeader, contentTypeHeader, body, callback) {
 //     let xhr = new XMLHttpRequest()
@@ -288,9 +311,9 @@ function createPlaylistResponse(data) {
 }
 
 // Makes the API call to search for an artist.
-function searchForArtistsCall() {
-    let query = 'jay'
-    let type = 'artist'
+function searchCall(type, query) {
+    // let query = 'jay'
+    // let type = 'artist'
     let market = 'US'
     let limit = 10
     let offset = 0
@@ -302,16 +325,28 @@ function searchForArtistsCall() {
     url += `&limit=${limit}`
     url += `&offset=${offset}`
 
-    callAPI('GET', url, true, false, null, searchForArtistsResponse, 200)
+    callAPI('GET', url, true, false, null, searchResponse, 200)
 }
 
 // Handles the API response from searchForArtistsCall().
-function searchForArtistsResponse(data) {
-    console.log(data)
+function searchResponse(data) {
+    const albums = (data.albums.items)
+    albums.forEach(function(album) {
+        const artists = album.artists
+        artists.forEach(function(artist) {
+            console.log(artist.name)
+        })
+        console.log(album.name)
+    })
 }
 
 // Styling/Layout Related Functions
 function showCreatePlaylistSection() {
     document.querySelector('.create-playlist-section').classList.remove('hidden')
     document.querySelector('#create-playlist-tab-btn').classList.add('hidden')
+}
+
+function showSearchSection() {
+    document.querySelector('.search-section').classList.remove('hidden')
+    document.querySelector('#search-tab-btn').classList.add('hidden')
 }

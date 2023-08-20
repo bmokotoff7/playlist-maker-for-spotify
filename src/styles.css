@@ -4,9 +4,15 @@ body {
 }
 
 main, 
-.create-playlist-section {
+.create-playlist-section,
+.search-radios {
     display: flex;
     flex-direction: column;
+}
+
+.search-radios {
+    justify-content: center;
+    align-items: center;
 }
 
 main button,
