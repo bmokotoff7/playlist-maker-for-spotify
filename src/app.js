@@ -20,15 +20,7 @@ document.addEventListener('click', function(e) {
     }
 
     else if (e.target.id === 'search-btn') {
-        const radios = document.getElementsByName('search-radio')
-        let selectedRadio = null
-        for (let radio of radios) {
-            if (radio.checked) {
-                selectedRadio = radio.value
-            }
-        }
-        console.log(selectedRadio)
-        searchCall(selectedRadio, document.querySelector('#search-terms').value)
+        searchForArtistsCall(document.querySelector('#search-terms').value)
     }
 })
 
@@ -311,9 +303,9 @@ function createPlaylistResponse(data) {
 }
 
 // Makes the API call to search for an artist.
-function searchCall(type, query) {
+function searchForArtistsCall(query) {
     // let query = 'jay'
-    // let type = 'artist'
+    let type = 'artist'
     let market = 'US'
     let limit = 10
     let offset = 0
@@ -325,19 +317,28 @@ function searchCall(type, query) {
     url += `&limit=${limit}`
     url += `&offset=${offset}`
 
-    callAPI('GET', url, true, false, null, searchResponse, 200)
+    callAPI('GET', url, true, false, null, searchForArtistsResponse, 200)
 }
 
 // Handles the API response from searchForArtistsCall().
-function searchResponse(data) {
-    const albums = (data.albums.items)
-    albums.forEach(function(album) {
-        const artists = album.artists
-        artists.forEach(function(artist) {
-            console.log(artist.name)
-        })
-        console.log(album.name)
+function searchForArtistsResponse(data) {
+    // const albums = (data.albums.items)
+    // albums.forEach(function(album) {
+    //     const artists = album.artists
+    //     artists.forEach(function(artist) {
+    //         console.log(artist.name)
+    //     })
+    //     console.log(album.name)
+    // })
+    let searchResultsHTML = ''
+    const artists = data.artists.items
+    artists.forEach(function(artist) {
+        // console.log(artist.name, artist.id)
+        searchResultsHTML += `
+            <li>${artist.name} (${artist.id})</li>
+        `
     })
+    document.querySelector('#search-results').innerHTML = searchResultsHTML
 }
 
 // Styling/Layout Related Functions

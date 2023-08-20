@@ -4,15 +4,9 @@ body {
 }
 
 main, 
-.create-playlist-section,
-.search-radios {
+.create-playlist-section {
     display: flex;
     flex-direction: column;
-}
-
-.search-radios {
-    justify-content: center;
-    align-items: center;
 }
 
 main button,
@@ -21,10 +15,13 @@ main button,
     margin: 1em auto;
 }
 
+#search-results {
+    text-align: left;
+    width: fit-content;
+    margin: auto;
+}
+
 /* --- TYPOGRAPHY --- */
-
-/* --- LAYOUT --- */
-
 
 /* --- UTILITY CLASSES --- */
 .hidden {
