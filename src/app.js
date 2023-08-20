@@ -22,6 +22,10 @@ document.addEventListener('click', function(e) {
     else if (e.target.id === 'search-btn') {
         searchForArtistsCall(document.querySelector('#search-terms').value)
     }
+
+    else if (e.target.dataset.artistId) {
+        console.log(e.target.dataset.artistId)
+    }
 })
 
 spotifyLoginBtn.addEventListener('click', requestUserAuthorization)
@@ -322,20 +326,11 @@ function searchForArtistsCall(query) {
 
 // Handles the API response from searchForArtistsCall().
 function searchForArtistsResponse(data) {
-    // const albums = (data.albums.items)
-    // albums.forEach(function(album) {
-    //     const artists = album.artists
-    //     artists.forEach(function(artist) {
-    //         console.log(artist.name)
-    //     })
-    //     console.log(album.name)
-    // })
     let searchResultsHTML = ''
     const artists = data.artists.items
     artists.forEach(function(artist) {
-        // console.log(artist.name, artist.id)
         searchResultsHTML += `
-            <li>${artist.name} (${artist.id})</li>
+            <li data-artist-id=${artist.id}>${artist.name} (${artist.id})</li>
         `
     })
     document.querySelector('#search-results').innerHTML = searchResultsHTML

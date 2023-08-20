@@ -21,6 +21,14 @@ main button,
     margin: auto;
 }
 
+#search-results li {
+    margin: 0.5em auto;
+    list-style: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
 /* --- TYPOGRAPHY --- */
 
 /* --- UTILITY CLASSES --- */
