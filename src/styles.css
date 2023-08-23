@@ -15,14 +15,16 @@ main button,
     margin: 1em auto;
 }
 
-#search-results {
+.item-list {
     text-align: left;
     width: fit-content;
     margin: auto;
 }
 
-#search-results li {
+.item-list li {
     margin: 0.5em auto;
+    padding: 0.5em;
+    border: 1px solid black;
     list-style: none;
     user-select: none;
     -webkit-user-select: none;

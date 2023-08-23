@@ -3,8 +3,8 @@
     <head>
         <link rel="stylesheet" href="styles.css">
     </head>
-    <body onload="onPageLoad()">
-
+    <!-- <body onload="onPageLoad()"> -->
+    <body>
         <section class="login">
             <button id="spotify-login-btn">Login to Spotify</button>
         </section>
@@ -27,13 +27,21 @@
             <section class="search-section hidden">
                 <input type="text" id="search-terms" placeholder="Enter search terms...">
                 <button class="" id="search-btn">Submit Search</button>
-                <ul id="search-results">
+                <ul class="item-list" id="search-results">
                     
                 </ul>
+            </section>
+            <section class="album-selection-section hidden">
+                <h4 id="artist-name"></h4>
+                <p>Select albums</p>
+                <ul class="item-list" id="album-list">
+                    
+                </ul>
+                <button id="create-album-playlist-btn">Create Playlist from albums</button>
             </section>
         </main>
 
         </div>
-        <script src="app.js"></script>
     </body>
+    <script src="script.js" type="module"></script>
 </html>
