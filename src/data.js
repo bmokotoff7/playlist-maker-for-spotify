@@ -23,6 +23,14 @@ export function getSelectedArtist() {
     return selectedArtist
 }
 
+let selectedArtistName = null
+export function setSelectedArtistName(value) {
+    selectedArtistName = value
+}
+export function getSelectedArtistName() {
+    return selectedArtistName
+}
+
 let artistAlbums = null
 export function setArtistAlbums(value) {
     artistAlbums = value

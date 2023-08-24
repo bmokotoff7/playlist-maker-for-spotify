@@ -11,33 +11,36 @@
     
         <main class="hidden">
             <h2 class="" id="welcome-message"></h2>
-
-            <button class="" id="get-playlists-btn">Get Playlists</button>
             
-            <button class="" id="create-playlist-tab-btn">Create Playlist</button>
-            <section class="create-playlist-section hidden">
-                <input type="text" id="playlist-name" placeholder="Name">
-                <input type="text" id="playlist-description" placeholder="Description">
-                <button class="" id="create-playlist-btn">Create Playlist</button>
+            <section class="create-artist-playlist-section">
+                <button class="" id="search-tab-btn">Create Artist Playlist</button>
+                <section class="search-section hidden">
+                    <input type="text" id="artist-playlist-search-terms" placeholder="Enter artist name...">
+                    <button class="" id="search-btn">Search</button>
+                    <ul class="item-list" id="artist-search-results">
+                        
+                    </ul>
+                </section>
+                <section class="album-selection-section hidden">
+                    <h4 id="artist-name"></h4>
+                    <p>Select albums</p>
+                    <ul class="item-list" id="album-list">
+                        
+                    </ul>
+                    <button id="create-album-playlist-btn">Create Playlist</button>
+                </section>
             </section>
 
-            <button class="" id="get-top-items-btn">Get Top Items</button>
-            
-            <button class="" id="search-tab-btn">Search</button>
-            <section class="search-section hidden">
-                <input type="text" id="search-terms" placeholder="Enter search terms...">
-                <button class="" id="search-btn">Submit Search</button>
-                <ul class="item-list" id="search-results">
-                    
-                </ul>
+            <section class="my-recent-rewind-section">
+                <button class="section-btn" id="get-recent-rewind-btn">Get My Recent Rewind</button>
             </section>
-            <section class="album-selection-section hidden">
-                <h4 id="artist-name"></h4>
-                <p>Select albums</p>
-                <ul class="item-list" id="album-list">
-                    
-                </ul>
-                <button id="create-album-playlist-btn">Create Playlist from albums</button>
+
+            <section class="my-all-time-favorites">
+                <button class="section-btn" id="get-all-time-favorites-btn">Get My All Time Favorites</button>
+            </section>
+
+            <section class="top-genre-mix-section">
+                <button class="section-btn" id="get-top-genre-mix-btn">Get My Top Genre Mix</button>
             </section>
         </main>
 

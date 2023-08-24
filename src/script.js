@@ -1,15 +1,17 @@
 import * as apiModule from "./api.js"
 import * as dataModule from "./data.js"
 
-// HTML Elements
-const spotifyLoginBtn = document.getElementById('spotify-login-btn')
-const welcomeMessageEl = document.getElementById('welcome-message')
-const getPlaylistsBtn = document.getElementById('get-playlists-btn')
-const getTopItemsBtn = document.getElementById('get-top-items-btn')
-
-// Event Listener(s)
+// Event Listener(s) ----------------------------------------------------------------------------------------
 document.addEventListener('click', function(e) {
-    if (e.target.id === 'create-playlist-tab-btn') {
+    if (e.target.id === 'spotify-login-btn') {
+        apiModule.requestUserAuthorization()
+    }
+
+    else if (e.target.id === 'get-recent-rewind-btn') {
+        apiModule.createRecentRewindPlaylist()
+    }
+    
+    else if (e.target.id === 'create-playlist-tab-btn') {
         showCreatePlaylistSection()
     }
     else if (e.target.id === 'create-playlist-btn') {
@@ -23,16 +25,19 @@ document.addEventListener('click', function(e) {
     }
 
     else if (e.target.id === 'search-btn') {
-        apiModule.searchForArtistsRequest(document.querySelector('#search-terms').value)
+        apiModule.searchForArtistsRequest(document.querySelector('#artist-playlist-search-terms').value)
     }
 
     else if (e.target.dataset.artistId) {
-        const artistID = e.target.dataset.artistId
-        dataModule.setSelectedArtist(artistID)
-        // use artist id to get the search list item 
+        // const artistID = e.target.dataset.artistId
+        // dataModule.setSelectedArtist(artistID)
+        const selectedArtist = dataModule.getArtistSearchResults().filter(function(artist) {
+            return artist.id === e.target.dataset.artistId
+        })[0]
+        dataModule.setSelectedArtistName(selectedArtist.name)
         hideSearchSection()
-        showAlbumSelectionSection(artistID)
-        apiModule.getArtistsAlbumsRequest(artistID)
+        showAlbumSelectionSection(selectedArtist.id)
+        apiModule.getArtistsAlbumsRequest(selectedArtist.id)
     }
 
     else if (e.target.dataset.albumId) {
@@ -45,18 +50,11 @@ document.addEventListener('click', function(e) {
         dataModule.setCreatingArtistPlaylist(true)
         dataModule.setUris([])
         getSelectedAlbums()
-        apiModule.createPlaylistRequest('Artist Mix')
+        const playlistName = `${dataModule.getSelectedArtistName()} Album Mix`
+        apiModule.createArtistPlaylist(playlistName)
     }
 
 })
-
-function createArtistPlaylist() {
-    apiModule.createPlaylistRequest('Artist Mix')
-}
-
-spotifyLoginBtn.addEventListener('click', apiModule.requestUserAuthorization)
-getPlaylistsBtn.addEventListener('click', apiModule.getUserPlaylistsRequest)
-getTopItemsBtn.addEventListener('click', apiModule.getTopItemsRequest)
 
 export function logTopItems() {
     console.log(dataModule.getTopItems())
@@ -70,7 +68,7 @@ export function displayArtistSearchResults() {
             <li data-artist-id=${artist.id}>${artist.name} (${artist.id})</li>
         `
     })
-    document.querySelector('#search-results').innerHTML = searchResultsHTML
+    document.querySelector('#artist-search-results').innerHTML = searchResultsHTML
 }
 
 export function displayArtistAlbums() {
@@ -78,9 +76,11 @@ export function displayArtistAlbums() {
     let albumsHTML = ''
     albums.forEach(function(album) {
         albumsHTML += `
-        <li data-album-id=${album.id}>
-            ${album.name} (${album.id})
+        <li class="album-list-item" data-album-id=${album.id}>
+            <div class="album-list-item-buttons">
+            <p class="album-name">${album.name}</p>
             <input type='checkbox' data-album-checkbox='${album.id}'>
+            </div>
             <ol class='item-list song-list hidden' data-song-list='${album.id}'>
                 <p>Album songs</p>    
             </ol>
@@ -116,7 +116,7 @@ function onPageLoad() {
     }
 }
 
-// Styling/Layout Related Functions
+// Styling/Layout Related Functions -------------------------------------------------------------------------
 function showCreatePlaylistSection() {
     document.querySelector('.create-playlist-section').classList.remove('hidden')
     document.querySelector('#create-playlist-tab-btn').classList.add('hidden')
@@ -141,7 +141,15 @@ function showAlbumSelectionSection(artistID) {
 }
 
 export function getCurrentUserProfile(userID) {
-    spotifyLoginBtn.classList.add('hidden')
+    document.querySelector('#spotify-login-btn').classList.add('hidden')
     document.querySelector('#welcome-message').textContent = `Welcome, ${userID}`
     document.querySelector('main').classList.remove('hidden')
+}
+
+function resetCreateArtistPlaylist() {
+    // Clear HTML elements
+    document.querySelector('#artist-playlist-search-terms').value = ''
+    document.querySelector('#artist-search-results').innerHTML = ''
+    document.querySelector('#album-list').innerHTML = ''
+    // Clear stored data
 }

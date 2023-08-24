@@ -393,3 +393,182 @@ function getTopItemsResponse(data) {
     dataModule.setTopItems(data)
     script.logTopItems()
 }
+
+// Trial Functions ------------------------------------------------------------------------------------------
+export function createArtistPlaylist(name, description) {
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    if (name === '') {
+        name = 'New Playlist'
+    }
+    if (description === undefined) {
+        description = 'Created by Playlist Maker for Spotify'
+    }
+    let body = `{
+        "name": "${name}",
+        "description": "${description}",
+        "public": false 
+    }`
+
+    const headers = getHeaders(true, true)
+    const response = fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: body
+    }).then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                refreshAccessToken()
+            }
+            else {
+                throw new Error(`HTTP status ${response.status}: ${response.statusText}`)
+            }
+        }
+        return response.json()
+    }).then(data => {
+
+        dataModule.setPlaylistID(data.id)
+        const albums = dataModule.getSelectedAlbums()
+        albums.forEach(function(album) {
+
+            let market = 'US'
+            let limit = 50
+            let offset = 0
+            
+            let url = `https://api.spotify.com/v1/albums/${album}/tracks?`
+            let args = new URLSearchParams({
+                market: market,
+                limit: limit,
+                offset: offset
+            })
+
+            const headers = getHeaders(true, false)
+            const response = fetch(url + args, {
+                method: 'GET',
+                headers: headers,
+                body: null
+            }).then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        refreshAccessToken()
+                    }
+                    else {
+                        throw new Error(`HTTP status ${response.status}: ${response.statusText}`)
+                    }
+                }
+                return response.json()
+            }).then(data => {
+                const tracks = data.items
+                const tracksArray = []
+                tracks.forEach(function(track) {
+                    tracksArray.push({
+                        name: track.name,
+                        id: track.id,
+                        uri: track.uri
+                    })
+                })
+                dataModule.setUris([])
+                dataModule.setUriString('')
+                tracksArray.forEach(function(track) {
+                    dataModule.pushUri(track.uri)
+                    dataModule.appendUriString(`${track.uri},`)
+                })
+                dataModule.editUriString()
+                addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
+            
+            }).catch(error => {
+                console.error('Error:', error)
+            })
+
+        })
+
+    }).catch(error => {
+        console.error('Error:', error)
+    })
+}
+
+export function createRecentRewindPlaylist() {
+    // Create Playlist
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    let body = `{
+        "name": "Your Recent Rewind",
+        "description": "Created by Playlist Maker for Spotify",
+        "public": false 
+    }`
+    const response = fetch(url, {
+        method: 'POST',
+        headers: getHeaders(true, true),
+        body: body
+    }).then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                refreshAccessToken()
+            }
+            else if (response.status === 502 || response.status === 500) {
+                handleApiRequest(method, url, authorizationHeader, contentTypeHeader, body, callback)
+            }
+            else {
+                throw new Error(`HTTP status ${response.status}: ${response.statusText}`)
+            }
+        }
+        return response.json()
+    }).then(data => {
+
+        dataModule.setPlaylistID(data.id)
+        // Get user's top 30 songs in the last month
+        let type = 'tracks' // type: 'artists', 'tracks'
+        let timeRange = 'short_term' // timeRange: 'short_term', 'medium_term' (default), 'long_term'
+        let limit = 30 // limit: 1-50 (default 20)
+        let offset = 0 // offset: default 0
+
+        let url = `https://api.spotify.com/v1/me/top/${type}?`
+        let args = new URLSearchParams({
+            time_range: timeRange,
+            limit: limit,
+            offset: offset
+        })
+
+        const response = fetch(url + args, {
+            method: 'GET',
+            headers: getHeaders(true, false),
+            body: null
+        }).then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    refreshAccessToken()
+                }
+                else if (response.status === 502 || response.status === 500) {
+                    handleApiRequest(method, url, authorizationHeader, contentTypeHeader, body, callback)
+                }
+                else {
+                    throw new Error(`HTTP status ${response.status}: ${response.statusText}`)
+                }
+            }
+            return response.json()
+        }).then(data => {
+            const tracks = data.items
+            const tracksArray = []
+            tracks.forEach(function(track) {
+                tracksArray.push({
+                    uri: track.uri
+                })
+            })
+            dataModule.setUris([])
+            dataModule.setUriString('')
+            tracksArray.forEach(function(track) {
+                dataModule.pushUri(track.uri)
+                dataModule.appendUriString(`${track.uri},`)
+            })
+            dataModule.editUriString()
+            addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
+            
+        }).catch(error => {
+            console.error('Error:', error)
+        })
+
+    }).catch(error => {
+        console.error('Error:', error)
+    })
+    
+
+    // Create playlist with those songs
+}
