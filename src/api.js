@@ -297,7 +297,8 @@ export function getTopItemsRequest() {
 // API Response Functions -----------------------------------------------------------------------------------
 function getCurrentUserProfileResponse(data) {
     userID = data.id
-    script.getCurrentUserProfile(userID)
+    const displayName = data.display_name
+    script.getCurrentUserProfile(displayName)
 }
 
 function getUserPlaylistsResponse(data) {
@@ -516,8 +517,8 @@ export function createRecentRewindPlaylist() {
         dataModule.setPlaylistID(data.id)
         // Get user's top 30 songs in the last month
         let type = 'tracks' // type: 'artists', 'tracks'
-        let timeRange = 'short_term' // timeRange: 'short_term', 'medium_term' (default), 'long_term'
-        let limit = 30 // limit: 1-50 (default 20)
+        let timeRange = 'long_term' // timeRange: 'short_term', 'medium_term' (default), 'long_term'
+        let limit = 50 // limit: 1-50 (default 20)
         let offset = 0 // offset: default 0
 
         let url = `https://api.spotify.com/v1/me/top/${type}?`

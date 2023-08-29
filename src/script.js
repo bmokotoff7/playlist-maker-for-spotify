@@ -40,10 +40,10 @@ document.addEventListener('click', function(e) {
         apiModule.getArtistsAlbumsRequest(selectedArtist.id)
     }
 
-    else if (e.target.dataset.albumId) {
-        document.querySelector(`[data-song-list='${e.target.dataset.albumId}']`).classList.remove('hidden')
-        dataModule.setSelectedAlbumID(e.target.dataset.albumId)
-        apiModule.getAlbumTracksRequest(e.target.dataset.albumId)
+    else if (e.target.dataset.albumTracks) {
+        document.querySelector(`[data-song-list='${e.target.dataset.albumTracks}']`).classList.remove('hidden')
+        dataModule.setSelectedAlbumID(e.target.dataset.albumTracks)
+        apiModule.getAlbumTracksRequest(e.target.dataset.albumTracks)
     }
 
     else if (e.target.id === 'create-album-playlist-btn') {
@@ -79,10 +79,10 @@ export function displayArtistAlbums() {
         <li class="album-list-item" data-album-id=${album.id}>
             <div class="album-list-item-buttons">
             <p class="album-name">${album.name}</p>
+            <button data-album-tracks='${album.id}'>Show Songs</button>
             <input type='checkbox' data-album-checkbox='${album.id}'>
             </div>
             <ol class='item-list song-list hidden' data-song-list='${album.id}'>
-                <p>Album songs</p>    
             </ol>
         </li>
         `
