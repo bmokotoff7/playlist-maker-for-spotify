@@ -3,7 +3,7 @@ import * as dataModule from './data.js'
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
-const redirectUri = 'http://127.0.0.1:5500'
+const redirectUri = 'https://playlistmakerforspotify.netlify.app/' //'http://127.0.0.1:5500'
 let accessToken = null
 let refreshToken = null
 let userID = null
