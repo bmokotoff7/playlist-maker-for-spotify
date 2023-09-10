@@ -30,6 +30,11 @@ main button,
     user-select: none;
     -webkit-user-select: none;
     cursor: pointer;
+    display: flex;
+}
+
+.item-list li img {
+    width: 80px;
 }
 
 .album-list-item-buttons {

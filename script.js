@@ -7,6 +7,10 @@ document.addEventListener('click', function(e) {
         apiModule.requestUserAuthorization()
     }
 
+    else if (e.target.id === 'create-artist-playlist-btn') {
+        createArtistPlaylist()
+    }
+
     else if (e.target.id === 'get-recent-rewind-btn') {
         apiModule.createRecentRewindPlaylist()
     }
@@ -20,17 +24,11 @@ document.addEventListener('click', function(e) {
         apiModule.createPlaylistRequest(name, description)
     }
 
-    else if (e.target.id === 'search-tab-btn') {
-        showSearchSection()
-    }
-
     else if (e.target.id === 'search-btn') {
         apiModule.searchForArtistsRequest(document.querySelector('#artist-playlist-search-terms').value)
     }
 
     else if (e.target.dataset.artistId) {
-        // const artistID = e.target.dataset.artistId
-        // dataModule.setSelectedArtist(artistID)
         const selectedArtist = dataModule.getArtistSearchResults().filter(function(artist) {
             return artist.id === e.target.dataset.artistId
         })[0]
@@ -41,9 +39,14 @@ document.addEventListener('click', function(e) {
     }
 
     else if (e.target.dataset.albumTracks) {
-        document.querySelector(`[data-song-list='${e.target.dataset.albumTracks}']`).classList.remove('hidden')
-        dataModule.setSelectedAlbumID(e.target.dataset.albumTracks)
-        apiModule.getAlbumTracksRequest(e.target.dataset.albumTracks)
+        if (document.querySelector(`[data-song-list='${e.target.dataset.albumTracks}']`).classList.contains('hidden')) {
+            document.querySelector(`[data-song-list='${e.target.dataset.albumTracks}']`).classList.remove('hidden')
+            dataModule.setSelectedAlbumID(e.target.dataset.albumTracks)
+            apiModule.getAlbumTracksRequest(e.target.dataset.albumTracks)
+        }
+        else {
+            document.querySelector(`[data-song-list='${e.target.dataset.albumTracks}']`).classList.add('hidden')
+        }
     }
 
     else if (e.target.id === 'create-album-playlist-btn') {
@@ -65,7 +68,10 @@ export function displayArtistSearchResults() {
     const artists = dataModule.getArtistSearchResults()
     artists.forEach(function(artist) {
         searchResultsHTML += `
-            <li data-artist-id=${artist.id}>${artist.name} (${artist.id})</li>
+            <li data-artist-id=${artist.id}>
+                <img src=${artist.imageUrl}>
+                <p>${artist.name}</p>
+            </li>
         `
     })
     document.querySelector('#artist-search-results').innerHTML = searchResultsHTML
@@ -116,6 +122,12 @@ function onPageLoad() {
     }
 }
 
+function createArtistPlaylist() {
+    // Reveal search section
+    showSearchSection()
+    // 
+}
+
 // Styling/Layout Related Functions -------------------------------------------------------------------------
 function showCreatePlaylistSection() {
     document.querySelector('.create-playlist-section').classList.remove('hidden')
@@ -124,7 +136,7 @@ function showCreatePlaylistSection() {
 
 function showSearchSection() {
     document.querySelector('.search-section').classList.remove('hidden')
-    document.querySelector('#search-tab-btn').classList.add('hidden')
+    document.querySelector('#create-artist-playlist-btn').classList.add('hidden')
 }
 
 function hideSearchSection() {

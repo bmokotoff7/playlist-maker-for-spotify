@@ -3,7 +3,8 @@ import * as dataModule from './data.js'
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
-const redirectUri = 'https://playlistmakerforspotify.netlify.app/' //'http://127.0.0.1:5500'
+// const redirectUri = 'https://playlistmakerforspotify.netlify.app/' 
+const redirectUri = 'http://127.0.0.1:5500'
 let accessToken = null
 let refreshToken = null
 let userID = null
@@ -199,7 +200,7 @@ export function createPlaylistRequest(name, description) {
     if (name === '') {
         name = 'New Playlist'
     }
-    if (description === '') {
+    if (description === undefined) {
         description = 'Created by Playlist Maker for Spotify'
     }
     let body = `{
@@ -315,15 +316,16 @@ function getUserPlaylistsResponse(data) {
 function createPlaylistResponse(data) {
     // const playlistName = data.name
     dataModule.setPlaylistID(data.id)
-    if (dataModule.getCreatingArtistPlaylist()) {
-        const albums = dataModule.getSelectedAlbums()
-        albums.forEach(function(album) {
-            getAlbumTracksRequest(album)
-        })
-    }
-    else {
-        console.log('false')
-    }
+    console.log(`${data.name} created.`)
+    // if (dataModule.getCreatingArtistPlaylist()) {
+    //     const albums = dataModule.getSelectedAlbums()
+    //     albums.forEach(function(album) {
+    //         getAlbumTracksRequest(album)
+    //     })
+    // }
+    // else {
+    //     console.log('false')
+    // }
     // const albums = dataModule.getSelectedAlbums()
     // albums.forEach(function(album) {
     //     getAlbumTracksRequest(album)
@@ -334,12 +336,13 @@ function createPlaylistResponse(data) {
 
 function searchForArtistsResponse(data) {
     const artists = data.artists.items
-    const artistsArray = []
-    artists.forEach(function(artist) {
-        artistsArray.push({
+    console.log(artists)
+    const artistsArray = artists.map(function(artist) {
+        return {
             name: artist.name,
-            id: artist.id
-        })
+            id: artist.id,
+            imageUrl: artist.images[2].url
+        }
     })
     dataModule.setArtistSearchResults(artistsArray)
     script.displayArtistSearchResults()
@@ -396,17 +399,13 @@ function getTopItemsResponse(data) {
 }
 
 // Trial Functions ------------------------------------------------------------------------------------------
-export function createArtistPlaylist(name, description) {
+export function createArtistPlaylist(name) {
+
+    // Create new playlist
     let url = `https://api.spotify.com/v1/users/${userID}/playlists`
-    if (name === '') {
-        name = 'New Playlist'
-    }
-    if (description === undefined) {
-        description = 'Created by Playlist Maker for Spotify'
-    }
     let body = `{
         "name": "${name}",
-        "description": "${description}",
+        "description": "Created by Playlist Maker for Spotify",
         "public": false 
     }`
 
@@ -427,6 +426,7 @@ export function createArtistPlaylist(name, description) {
         return response.json()
     }).then(data => {
 
+        // Add selected albums to new playlist
         dataModule.setPlaylistID(data.id)
         const albums = dataModule.getSelectedAlbums()
         albums.forEach(function(album) {
@@ -458,20 +458,17 @@ export function createArtistPlaylist(name, description) {
                 }
                 return response.json()
             }).then(data => {
+
+                // Add all tracks from album to the playlist
                 const tracks = data.items
-                const tracksArray = []
-                tracks.forEach(function(track) {
-                    tracksArray.push({
-                        name: track.name,
-                        id: track.id,
-                        uri: track.uri
-                    })
+                const tracksArray = tracks.map(function(track) {
+                    return track.uri
                 })
                 dataModule.setUris([])
                 dataModule.setUriString('')
-                tracksArray.forEach(function(track) {
-                    dataModule.pushUri(track.uri)
-                    dataModule.appendUriString(`${track.uri},`)
+                tracksArray.forEach(function(uri) {
+                    dataModule.pushUri(uri)
+                    dataModule.appendUriString(`${uri},`)
                 })
                 dataModule.editUriString()
                 addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
@@ -479,9 +476,7 @@ export function createArtistPlaylist(name, description) {
             }).catch(error => {
                 console.error('Error:', error)
             })
-
         })
-
     }).catch(error => {
         console.error('Error:', error)
     })
