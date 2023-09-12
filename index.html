@@ -1,50 +1,14 @@
-<!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="styles.css">
-    	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <section class="login">
-            <button id="spotify-login-btn">Login to Spotify</button>
-        </section>
-    
-        <main class="hidden">
-            <h2 class="" id="welcome-message"></h2>
-            
-            <section class="create-artist-playlist-section">
-                <button class="" id="create-artist-playlist-btn">Create Artist Playlist</button>
-                <section class="search-section hidden">
-                    <input type="text" id="artist-playlist-search-terms" placeholder="Enter artist name...">
-                    <button class="" id="search-btn">Search</button>
-                    <ul class="item-list" id="artist-search-results">
-                        
-                    </ul>
-                </section>
-                <section class="album-selection-section hidden">
-                    <h4 id="artist-name"></h4>
-                    <p>Select albums</p>
-                    <ul class="item-list" id="album-list">
-                        
-                    </ul>
-                    <button id="create-album-playlist-btn">Create Playlist</button>
-                </section>
-            </section>
-
-            <section class="my-recent-rewind-section">
-                <button class="section-btn" id="get-recent-rewind-btn">Get My Recent Rewind</button>
-            </section>
-
-            <section class="my-all-time-favorites">
-                <button class="section-btn" id="get-all-time-favorites-btn">Get My All Time Favorites</button>
-            </section>
-
-            <section class="top-genre-mix-section">
-                <button class="section-btn" id="get-top-genre-mix-btn">Get My Top Genre Mix</button>
-            </section>
-        </main>
-
-        </div>
+        <div id="root"></div>
+        <script src="/src/index.js" type="module"></script>
     </body>
-    <script src="script.js" type="module"></script>
 </html>
