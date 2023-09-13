@@ -1,5 +1,6 @@
 import * as script from "./index.js"
 import * as dataModule from './data.js'
+import renderApp from "./main.js"
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -68,7 +69,7 @@ function requestAccessToken(code) {
 function refreshAccessToken() {
     let body = new URLSearchParams({
         grant_type: 'refresh_token',
-        refresh_token: refreshToken,
+        refresh_token: localStorage.getItem('refreshToken'),
         client_id: clientId
     })
 
@@ -166,6 +167,7 @@ function handleApiRequest(method, url, authorizationHeader, contentTypeHeader, b
 }
 
 function getHeaders(authorizationHeader, contentTypeHeader) {
+    accessToken = localStorage.getItem('accessToken')
     let headers = null
     if (authorizationHeader && contentTypeHeader) {
         headers = {
@@ -340,16 +342,16 @@ function createPlaylistResponse(data) {
 
 function searchForArtistsResponse(data) {
     const artists = data.artists.items
-    console.log(artists)
     const artistsArray = artists.map(function(artist) {
         return {
             name: artist.name,
             id: artist.id,
-            imageUrl: artist.images[2].url
+            imageUrl: (artist.images[0] ? artist.images[0].url : null)
         }
     })
     dataModule.setArtistSearchResults(artistsArray)
-    script.displayArtistSearchResults()
+    console.log(dataModule.getArtistSearchResults())
+    renderApp()
 }
 
 function getArtistsAlbumsResponse(data) {
@@ -363,7 +365,8 @@ function getArtistsAlbumsResponse(data) {
         })
     })
     dataModule.setArtistAlbums(albumsArray)
-    script.displayArtistAlbums()
+    console.log(dataModule.getArtistAlbums())
+    renderApp()
 }
 
 function getAlbumTracksResponse(data) {

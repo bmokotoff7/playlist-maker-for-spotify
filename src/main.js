@@ -5,8 +5,10 @@ import {BrowserRouter} from 'react-router-dom'
 
 import './index.css'
 
+const root = ReactDOM.createRoot(document.getElementById('root'))
+
 export default function renderApp() {
-  ReactDOM.createRoot(document.getElementById('root')).render(
+  root.render(
     <BrowserRouter>
        <App />
     </BrowserRouter>

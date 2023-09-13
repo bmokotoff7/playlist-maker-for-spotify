@@ -1,15 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Header() {
     return (
         <header>
-            <a href="/home">
+            <Link to='/home'>
                 <button className="btn" id="home-btn">Home</button>
-            </a>
+            </Link>
             <h1>Playlist Maker for Spotify</h1>
-            <a href="/">
+            <Link to="/">
                 <button className="btn" id="user-logout-btn">Log Out</button>
-            </a>
+            </Link>
         </header>
     )
 }

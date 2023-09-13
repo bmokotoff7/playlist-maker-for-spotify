@@ -1,3 +1,4 @@
+import { render } from "react-dom"
 import * as apiModule from "./api.js"
 import * as dataModule from "./data.js"
 import renderApp from "./main.js"
@@ -6,10 +7,7 @@ import renderApp from "./main.js"
 document.addEventListener('click', function(e) {
     // Handles clicks on the login button
     if (e.target.id === 'spotify-login-btn') {
-        if (JSON.parse(localStorage.getItem('isLoggedIn')) === true) {
-            window.location.href = 'http://127.0.0.1:5173/home'
-        }
-        else {
+        if (!JSON.parse(localStorage.getItem('isLoggedIn')) === true) {
             apiModule.requestUserAuthorization()
         }
     }
@@ -17,22 +15,36 @@ document.addEventListener('click', function(e) {
     // Handles clicks on the logout button
     else if (e.target.id === 'user-logout-btn') {
         apiModule.userLogout()
-        window.location.href = 'http://127.0.0.1:5173'
     }
 
     // Handles clicks on the Home button
     else if (e.target.id === 'home-btn') {
-        window.location.href = 'http://127.0.0.1:5173/home'
-    }
-    
-    // Handles clicks on the 'Create Artist Playlist' button
-    else if (e.target.id === 'create-artist-playlist-btn') {
-        window.location.href = 'http://127.0.0.1:5173/artistplaylist'
-        createArtistPlaylist()
     }
 
-    else if (e.target.id === 'get-recent-rewind-btn') {
-        apiModule.createRecentRewindPlaylist()
+    // Handles clicks on the Create Artist Playlist button
+    else if (e.target.id === 'create-artist-playlist-btn') {
+        dataModule.setArtistSearchResults(null)
+        dataModule.setSelectedArtistName(null)
+        renderApp()
+    }
+    
+    // Handles clicks on the Search button (Artist Playlist)
+    else if (e.target.id === 'artist-search-btn') {
+        const searchTerms = document.querySelector('#artist-playlist-search-terms').value
+        if (searchTerms) {
+            apiModule.searchForArtistsRequest(searchTerms)
+        }
+    }
+
+    // Handles clicks on an artist from the search results list
+    else if (e.target.dataset.artistId) {
+        const selectedArtist = dataModule.getArtistSearchResults().filter(function(artist) {
+            return artist.id === e.target.dataset.artistId
+        })[0]
+        console.log(selectedArtist.name)
+        dataModule.setSelectedArtistName(selectedArtist.name)
+        renderApp()
+        apiModule.getArtistsAlbumsRequest(selectedArtist.id)
     }
     
     else if (e.target.id === 'create-playlist-tab-btn') {
@@ -48,15 +60,15 @@ document.addEventListener('click', function(e) {
         apiModule.searchForArtistsRequest(document.querySelector('#artist-playlist-search-terms').value)
     }
 
-    else if (e.target.dataset.artistId) {
-        const selectedArtist = dataModule.getArtistSearchResults().filter(function(artist) {
-            return artist.id === e.target.dataset.artistId
-        })[0]
-        dataModule.setSelectedArtistName(selectedArtist.name)
-        hideSearchSection()
-        showAlbumSelectionSection(selectedArtist.id)
-        apiModule.getArtistsAlbumsRequest(selectedArtist.id)
-    }
+    // else if (e.target.dataset.artistId) {
+    //     const selectedArtist = dataModule.getArtistSearchResults().filter(function(artist) {
+    //         return artist.id === e.target.dataset.artistId
+    //     })[0]
+    //     dataModule.setSelectedArtistName(selectedArtist.name)
+    //     hideSearchSection()
+    //     showAlbumSelectionSection(selectedArtist.id)
+    //     apiModule.getArtistsAlbumsRequest(selectedArtist.id)
+    // }
 
     else if (e.target.dataset.albumTracks) {
         if (document.querySelector(`[data-song-list='${e.target.dataset.albumTracks}']`).classList.contains('hidden')) {
@@ -94,7 +106,7 @@ export function displayArtistSearchResults() {
             </li>
         `
     })
-    document.querySelector('#artist-search-results').innerHTML = searchResultsHTML
+    // document.querySelector('#artist-search-results').innerHTML = searchResultsHTML
 }
 
 export function displayArtistAlbums() {
@@ -140,9 +152,6 @@ function onPageLoad() {
     renderApp()
     if (window.location.search.length > 0) {
         apiModule.handleRedirect()
-    }
-    else if (localStorage.getItem('accessToken')) {
-        console.log(localStorage.getItem('accessToken'))
     }
 }
 

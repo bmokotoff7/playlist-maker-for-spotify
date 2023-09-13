@@ -135,17 +135,29 @@ main {
 }
 
 .item-list li {
-    /* border: 1px solid red; */
     border-bottom: 1px solid #4D4D4D;
     width: 500px;
     text-align: left;
     padding: 1em;
 }
 
-.artist-li:hover {
-    /* border: 1px solid red; */
+.artist-li {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
+
+.artist-li:hover, .artist-li:hover .artist-li-name {
     color: #16db65;
     cursor: pointer;
+}
+
+.artist-img {
+    width: 80px;
+    height: 80px;
+    padding-right: 1em;
 }
 
 .item-list li:last-child {
