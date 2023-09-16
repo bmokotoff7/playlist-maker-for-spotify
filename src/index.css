@@ -2,7 +2,7 @@ body {
     margin: 0;
     font-family: 'DM Sans', sans-serif;
     text-align: center;
-    background: #242424 url(images/login-background.jpg);
+    /* background: #242424 url(images/login-background.jpg); */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -170,18 +170,45 @@ main {
 }
 
 .album-li {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    /* border: 1px solid red; */
+    display: grid;
+    grid-template: auto auto/ auto auto;
     align-items: center;
 }
 
-.album-li-btn {
+.album-text {
+    /* border: 1px solid red; */
+    margin-right: 1em;
+}
+
+.album-select-btn {
     background-color: #4D4D4D;
     color: white;
+    align-self: center;
+    width: fit-content;
+    margin-left: auto;
+}
+
+.album-select-btn:hover {
+    text-decoration: underline;
+    font-weight: 500;
 }
 
 .show-songs-btn {
     background: none;
+    color: white;
     padding: 0.5em 0 0;
+}
+
+.album-track-list li {
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+.selected {
+    background-color: #16db65;
+    color: #242424;
 }

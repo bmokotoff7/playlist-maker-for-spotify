@@ -107,3 +107,13 @@ export function getUriString() {
 export function editUriString() {
     uriString = uriString.substring(0, uriString.length - 1)
 }
+
+let trackListAlbumID = null
+
+export function setTrackListAlbumID(value) {
+    trackListAlbumID = value
+}
+
+export function getTrackListAlbumID() {
+    return trackListAlbumID
+}

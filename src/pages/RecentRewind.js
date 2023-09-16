@@ -7,15 +7,15 @@ export default function RecentRewind() {
             <Header />
             <main>
                 <h1>Recent Rewind</h1>
-                <section className="playlist-setup">
-                    <h4>Select number of tracks</h4>
-                    <div className="select-playlist-size-btns">
-                        <button className="btn">10</button>
-                        <button className="btn">30</button>
-                        <button className="btn">50</button>
+                {/* <section className="playlist-setup"> */}
+                    {/* <h4>Select number of tracks</h4> */}
+                    {/* <div className="select-playlist-size-btns"> */}
+                        {/* <button className="btn">10</button> */}
+                        {/* <button className="btn">30</button> */}
+                        {/* <button className="btn">50</button> */}
                         {/* <button className="btn">Custom</button> */}
-                    </div>
-                </section>
+                    {/* </div> */}
+                {/* </section> */}
                 
                 <section classNameName="artist-albums-section">
                     <h4>Playlist Tracks</h4>

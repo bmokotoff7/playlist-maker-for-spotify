@@ -18,7 +18,7 @@ export default function ArtistPlaylistAlbums(props) {
                     <AlbumList data={props.data}/>
                     <h4>X Albums Selected</h4>
                 </section>
-                <button className="btn">Create Playlist</button>
+                <button className="btn" id="ap-playlist-create-btn">Create Playlist</button>
                 <h3>[PLAYLIST NAME] created</h3>
                 <button className="btn">Open Playlist in Spotify</button>
             </main>

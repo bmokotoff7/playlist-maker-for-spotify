@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 export default function AlbumListItem(props) {
     return (
         <li className="album-li">
-            <div>
+            <div className="album-text">
                 <h3>{props.name}</h3>
-                <button className="btn album-li-btn show-songs-btn">Show Songs</button>
+                <button className="btn show-songs-btn" data-album-tracks={props.id}>Show Tracks</button>
             </div>
-            <div className="album-li-btns">
-                <button className="btn album-li-btn">Select Album</button>
-            </div>
+            <button className="btn album-select-btn" data-album-id={props.id}>Select</button>
+            <ol className="album-track-list hidden" data-track-list={props.id}>
+                
+            </ol>
         </li>
     )
+
 }

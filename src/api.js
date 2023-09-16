@@ -1,6 +1,7 @@
 import * as script from "./index.js"
 import * as dataModule from './data.js'
 import renderApp from "./main.js"
+import { render } from "react-dom"
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
@@ -371,6 +372,7 @@ function getArtistsAlbumsResponse(data) {
 
 function getAlbumTracksResponse(data) {
     const tracks = data.items
+    console.log(tracks)
     const tracksArray = []
     tracks.forEach(function(track) {
         tracksArray.push({
@@ -379,21 +381,24 @@ function getAlbumTracksResponse(data) {
             uri: track.uri
         })
     })
-    if (dataModule.getCreatingArtistPlaylist()) {
-        dataModule.setUris([])
-        dataModule.setUriString('')
-        tracksArray.forEach(function(track) {
-            dataModule.pushUri(track.uri)
-            dataModule.appendUriString(`${track.uri},`)
-        })
-        dataModule.editUriString()
-        addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
-    }
+    dataModule.setAlbumTracks(tracksArray)
+    console.log(dataModule.getAlbumTracks())
+    script.renderTrackList(tracksArray, dataModule.getTrackListAlbumID())
+    // if (dataModule.getCreatingArtistPlaylist()) {
+    //     dataModule.setUris([])
+    //     dataModule.setUriString('')
+    //     tracksArray.forEach(function(track) {
+    //         dataModule.pushUri(track.uri)
+    //         dataModule.appendUriString(`${track.uri},`)
+    //     })
+    //     dataModule.editUriString()
+    //     addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
+    // }
 
-    else {
-        dataModule.setAlbumTracks(tracksArray)
-        script.displayAlbumTracks()
-    }
+    // else {
+    //     dataModule.setAlbumTracks(tracksArray)
+    //     script.displayAlbumTracks()
+    // }
 }
 
 function addItemsToPlaylistResponse(data) {

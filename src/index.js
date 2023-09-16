@@ -46,6 +46,49 @@ document.addEventListener('click', function(e) {
         renderApp()
         apiModule.getArtistsAlbumsRequest(selectedArtist.id)
     }
+
+    // Handles clicks on an album's "Select" button
+    else if (e.target.dataset.albumId) {
+        const albumID = e.target.dataset.albumId
+        const selectBtn = document.querySelector(`[data-album-id='${e.target.dataset.albumId}']`)
+        if (selectBtn.classList.contains('selected')) {
+            selectBtn.classList.toggle('selected')
+            selectBtn.textContent = "Select"
+        }
+        else {
+            selectBtn.classList.toggle('selected')
+            selectBtn.textContent = "Selected"
+        }
+    }
+
+    // Handles clicks on an album's "Show Songs" button
+    else if (e.target.dataset.albumTracks) {
+        const albumID = e.target.dataset.albumTracks
+        const tracksBtn = document.querySelector(`[data-album-tracks='${albumID}']`)
+        const tracklist = document.querySelector(`[data-track-list='${albumID}']`)
+        // if songs are showing, hide the list and change text to "show songs"
+        if (tracklist.classList.contains('hidden')) {
+            // show song list
+            tracklist.classList.toggle('hidden')
+            // change button text to "hide tracks"
+            tracksBtn.textContent = "Hide Tracks"
+            // call API to get tracks for the album
+            dataModule.setTrackListAlbumID(albumID)
+            apiModule.getAlbumTracksRequest(albumID)
+        }
+        else {
+            // hide song list
+            tracklist.classList.toggle('hidden')
+            // change button text to "show tracks"
+            tracksBtn.textContent = "Show Tracks"
+        }
+    }
+
+    else if (e.target.id === 'ap-playlist-create-btn') {
+        getSelectedAlbums()
+        const playlistName = `${dataModule.getSelectedArtistName()} Album Mix`
+        apiModule.createArtistPlaylist(playlistName)
+    }
     
     else if (e.target.id === 'create-playlist-tab-btn') {
         showCreatePlaylistSection()
@@ -139,13 +182,6 @@ export function displayAlbumTracks() {
     document.querySelector(`[data-song-list='${dataModule.getSelectedAlbumID()}']`).innerHTML = tracksHTML
 }
 
-function getSelectedAlbums() {
-    const albumListHTML = document.querySelector('#album-list')
-    const selectedAlbums = Array.from(albumListHTML.querySelectorAll('input[type="checkbox"]:checked')).map(function(album) {
-        return album.dataset.albumCheckbox
-    })
-    dataModule.setSelectedAlbums(selectedAlbums)
-}
 
 window.addEventListener('load', onPageLoad)
 function onPageLoad() {
@@ -198,4 +234,18 @@ function resetCreateArtistPlaylist() {
     document.querySelector('#artist-search-results').innerHTML = ''
     document.querySelector('#album-list').innerHTML = ''
     // Clear stored data
+}
+
+export function renderTrackList(trackListArray, albumID) {
+    const tracklist = document.querySelector(`[data-track-list='${albumID}']`)
+    tracklist.innerHTML = trackListArray.map(function(track) {
+        return `<li>${track.name}</li>`
+    }).join('')
+}
+
+function getSelectedAlbums() {
+    const selectedAlbums = Array.from(document.querySelectorAll('.selected')).map(function(album) {
+        return album.dataset.albumId
+    })
+    dataModule.setSelectedAlbums(selectedAlbums)
 }

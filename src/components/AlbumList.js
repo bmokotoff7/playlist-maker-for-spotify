@@ -7,7 +7,7 @@ export default function AlbumList(props) {
         return (
             <ul className="item-list">
                 {data && data.map(album => {
-                    return <AlbumListItem name={album.name} />
+                    return <AlbumListItem name={album.name} id={album.id} />
                 })}
             </ul>
         )
