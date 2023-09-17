@@ -2,33 +2,72 @@ body {
     margin: 0;
     font-family: 'DM Sans', sans-serif;
     text-align: center;
-    /* background: #242424 url(images/login-background.jpg); */
+    background: #242424 url(images/login-background.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     backdrop-filter: brightness(20%);
     -webkit-backdrop-filter: brightness(20%);
     color: white;
-    /* height: 100vh; */
+    height: auto;
+    max-height: 100%;
+    overflow: auto;
 }
 
 header {
-    /* border: 2px solid red; */
     color: white;
     background-color: #242424;
     text-align: center;
-    padding: 0.75em 0;
+    padding: 0.75em;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
 header h1 {
+    font-size: 1.5rem;
     padding: 0;
     font-weight: 600;
-    /* border: 1px solid red; */
     width: fit-content;
     margin: 0 auto;
+}
+
+.main-header {
+    position: relative;
+
+}
+
+.main-header h1 {
+    font-size: 1.5rem;
+    padding: 0;
+    font-weight: 600;
+    width: fit-content;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.header-btn {
+    font-size: 0.8rem;
+    border: none;
+    background-color: #4D4D4D;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    border-radius: 0.25em;
+    padding: 0.5em 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    cursor: pointer;
+}
+
+#profile-btn {
+    text-transform: none;
+}
+
+.header-btn:hover {
+    background-color: #5d5d5d;
 }
 
 /* Small logo for mobile */
@@ -44,9 +83,7 @@ header h1 {
 }
 
 main {
-    padding: 50px;
-    /* height: 100%; */
-    overflow: scroll;
+    padding: 2em 0;
 }
 
 .btn {
@@ -64,7 +101,6 @@ main {
 }
 
 .btn:hover {
-    text-decoration: underline;
     font-weight: 700;
 }
 
@@ -131,6 +167,8 @@ main {
     margin: 0 auto;
     background-color: #242424;
     border-radius: 0.25em;
+    height: auto;
+    max-height: calc(100% - 68.8px - 320px);
     overflow: scroll;
 }
 
@@ -187,11 +225,14 @@ main {
     align-self: center;
     width: fit-content;
     margin-left: auto;
+    padding: 0.75em;
+    letter-spacing: 0.02rem;
+    text-transform: none
 }
 
 .album-select-btn:hover {
-    text-decoration: underline;
     font-weight: 500;
+    background-color: #5d5d5d;
 }
 
 .show-songs-btn {
@@ -208,7 +249,59 @@ main {
     display: none;
 }
 
-.selected {
+.selected, .selected:hover {
     background-color: #16db65;
     color: #242424;
+}
+
+.fa-user {
+    border-radius: 50%;
+    padding: 0.5rem;
+    background: #242424;
+    margin-right: 0.5em;
+    font-size: 1rem;
+}
+
+.fa-house {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+/* .login-page {
+    background-image: url(images/login-background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    backdrop-filter: brightness(20%);
+    -webkit-backdrop-filter: brightness(20%);
+} */
+
+.logout-modal {
+    background-color: #242424;
+    border-radius: 0.25em;
+    position: absolute;
+    top: 65px;
+    right: 0;
+    margin-right: 0.75em;
+    padding: 0.5em;
+}
+
+.logout-modal .btn {
+    background-color: #242424;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.logout-modal .btn:hover {
+    background-color: #4D4D4D;
+    font-weight: 500;
+}
+
+#profile-btn {
+    display: flex;
+    align-items: center;
+}
+
+#profile-btn p {
+    margin: 0;
 }

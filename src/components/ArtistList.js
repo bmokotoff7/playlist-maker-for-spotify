@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../components/Header";
 import ArtistListItem from "./ArtistListItem";
 
 export default function ArtistList(props) {

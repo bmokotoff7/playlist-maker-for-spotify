@@ -1,12 +1,11 @@
 import * as script from "./index.js"
 import * as dataModule from './data.js'
 import renderApp from "./main.js"
-import { render } from "react-dom"
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
 // const redirectUri = 'https://playlistmakerforspotify.netlify.app/' 
-const redirectUri = 'http://127.0.0.1:5173/home' // add '/home' to this to go to the homepage after login
+const redirectUri = 'http://127.0.0.1:5173/home'
 let accessToken = null
 let refreshToken = null
 let userID = localStorage.getItem('userID') ? localStorage.getItem('userID') : null
@@ -235,6 +234,7 @@ export function searchForArtistsRequest(query) {
     handleApiRequest('GET', url + args, true, false, null, searchForArtistsResponse)
 }
 
+// UPDATE: add other groups, add functionality to get next page of albums in response
 export function getArtistsAlbumsRequest(artistID) {
     let include_groups = 'album' // have user specify this later with checkboxes
     let market = 'US'
@@ -306,11 +306,10 @@ function getCurrentUserProfileResponse(data) {
     console.log(displayName)
     localStorage.setItem('userID', userID)
     localStorage.setItem('displayName', displayName)
-    // script.getCurrentUserProfile(displayName)
+    renderApp()
 }
 
 function getUserPlaylistsResponse(data) {
-    // console.log(data)
     const playlists = data.items
     playlists.forEach(function(playlist) {
         console.log(playlist.name)
@@ -321,24 +320,8 @@ function getUserPlaylistsResponse(data) {
 }
 
 function createPlaylistResponse(data) {
-    // const playlistName = data.name
     dataModule.setPlaylistID(data.id)
     console.log(`${data.name} created.`)
-    // if (dataModule.getCreatingArtistPlaylist()) {
-    //     const albums = dataModule.getSelectedAlbums()
-    //     albums.forEach(function(album) {
-    //         getAlbumTracksRequest(album)
-    //     })
-    // }
-    // else {
-    //     console.log('false')
-    // }
-    // const albums = dataModule.getSelectedAlbums()
-    // albums.forEach(function(album) {
-    //     getAlbumTracksRequest(album)
-
-    // })
-    // console.log(`"${playlistName}" created.`)
 }
 
 function searchForArtistsResponse(data) {
@@ -351,7 +334,6 @@ function searchForArtistsResponse(data) {
         }
     })
     dataModule.setArtistSearchResults(artistsArray)
-    console.log(dataModule.getArtistSearchResults())
     renderApp()
 }
 
@@ -366,7 +348,6 @@ function getArtistsAlbumsResponse(data) {
         })
     })
     dataModule.setArtistAlbums(albumsArray)
-    console.log(dataModule.getArtistAlbums())
     renderApp()
 }
 
@@ -382,23 +363,7 @@ function getAlbumTracksResponse(data) {
         })
     })
     dataModule.setAlbumTracks(tracksArray)
-    console.log(dataModule.getAlbumTracks())
     script.renderTrackList(tracksArray, dataModule.getTrackListAlbumID())
-    // if (dataModule.getCreatingArtistPlaylist()) {
-    //     dataModule.setUris([])
-    //     dataModule.setUriString('')
-    //     tracksArray.forEach(function(track) {
-    //         dataModule.pushUri(track.uri)
-    //         dataModule.appendUriString(`${track.uri},`)
-    //     })
-    //     dataModule.editUriString()
-    //     addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
-    // }
-
-    // else {
-    //     dataModule.setAlbumTracks(tracksArray)
-    //     script.displayAlbumTracks()
-    // }
 }
 
 function addItemsToPlaylistResponse(data) {
@@ -592,5 +557,8 @@ export function getUserId() {
 export function userLogout() {
     localStorage.removeItem('userID')
     localStorage.removeItem('displayName')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('code_verifier')
+    localStorage.removeItem('refreshToken')
     localStorage.setItem('isLoggedIn', false)
 }

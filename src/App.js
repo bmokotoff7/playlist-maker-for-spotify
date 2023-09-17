@@ -9,6 +9,7 @@ import RecentRewind from './pages/RecentRewind'
 import Favorites from './pages/Favorites'
 import * as dataModule from "./data.js"
 
+// change artistplaylistalbums to artistplaylist/albums ?
 export default function App() {
   const search = dataModule.getArtistSearchResults()
   const albums = dataModule.getArtistAlbums()
