@@ -6,8 +6,8 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    backdrop-filter: brightness(20%);
-    -webkit-backdrop-filter: brightness(20%);
+    backdrop-filter: brightness(15%);
+    -webkit-backdrop-filter: brightness(15%);
     color: white;
     height: auto;
     max-height: 100%;
@@ -164,7 +164,7 @@ main {
     flex-direction: column;
     align-items: center;
     width: fit-content;
-    margin: 0 auto;
+    margin: 1em auto 2em;
     background-color: #242424;
     border-radius: 0.25em;
     height: auto;
@@ -172,11 +172,29 @@ main {
     overflow: scroll;
 }
 
-.item-list li {
+.ol-item-list {
+    padding: 0.75em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    margin: 1em auto 2em;
+    background-color: #242424;
+    border-radius: 0.25em;
+    height: auto;
+    max-height: calc(100% - 68.8px - 320px);
+    overflow: scroll;
+}
+
+.item-list li, .ol-item-list li {
     border-bottom: 1px solid #4D4D4D;
-    width: 500px;
+    width: 600px;
     text-align: left;
     padding: 1em;
+}
+
+.ol-item-list li {
+    margin: auto 2em;
 }
 
 .artist-li {
@@ -198,7 +216,7 @@ main {
     padding-right: 1em;
 }
 
-.item-list li:last-child {
+.item-list li:last-child, .ol-item-list li:last-child {
     border-bottom: none;
 }
 
@@ -304,4 +322,16 @@ main {
 
 #profile-btn p {
     margin: 0;
+}
+
+.back-btn {
+    background-color: #4D4D4D;
+    color: white;
+    padding: 0.5em 0.75em;
+    text-transform: none;
+}
+
+.back-btn:hover {
+    background-color: #5d5d5d;
+    font-weight: 500;
 }

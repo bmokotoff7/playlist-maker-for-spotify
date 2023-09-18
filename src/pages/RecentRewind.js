@@ -1,12 +1,14 @@
 import React from "react";
 import Header from "../components/Header";
+import TrackList from "../components/TrackList";
+import { Link } from "react-router-dom";
 
-export default function RecentRewind() {
+export default function RecentRewind(props) {
     return (
         <div>
             <Header />
             <main>
-                <h1>Recent Rewind</h1>
+                <h1 id="rr-heading">Recent Rewind</h1>
                 {/* <section className="playlist-setup"> */}
                     {/* <h4>Select number of tracks</h4> */}
                     {/* <div className="select-playlist-size-btns"> */}
@@ -17,26 +19,15 @@ export default function RecentRewind() {
                     {/* </div> */}
                 {/* </section> */}
                 
-                <section classNameName="artist-albums-section">
+                <section className="artist-albums-section" id="rr-tracks-section">
                     <h4>Playlist Tracks</h4>
-                    <ul className="item-list">
-                        <li className="song-li">
-                            <h3>Song Name</h3>
-                            <p>Artist</p>
-                        </li>
-                        <li className="song-li">
-                            <h3>Song Name</h3>
-                            <p>Artist</p>
-                        </li>
-                        <li className="song-li">
-                            <h3>Song Name</h3>
-                            <p>Artist</p>
-                        </li>
-                    </ul>
+                    <TrackList data={props.data} />
                 </section>
-                <button className="btn">Create Playlist</button>
-                <h3>[PLAYLIST NAME] created</h3>
-                <button className="btn">Open Playlist in Spotify</button>
+                <button className="btn" id="rr-playlist-create-btn">Create Playlist</button>
+                <h3 id="playlist-created-text" className="hidden">Playlist created</h3>
+                <a href={props.link} target='_blank' id="open-playlist-btn" className="hidden">
+                    <button className="btn">Open Playlist in Spotify</button>
+                </a>
             </main>
         </div>
     )

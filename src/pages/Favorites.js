@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
+import TrackList from "../components/TrackList";
 
-export default function Favorites() {
+export default function Favorites(props) {
     return (
         <div>
             <Header />
@@ -17,26 +18,15 @@ export default function Favorites() {
                     {/* </div> */}
                 {/* </section> */}
                 
-                <section classNameName="artist-albums-section">
+                <section classNameName="artist-albums-section" id="fav-tracks-section">
                     <h4>Playlist Tracks</h4>
-                    <ul className="item-list">
-                        <li className="song-li">
-                            <h3>Song Name</h3>
-                            <p>Artist</p>
-                        </li>
-                        <li className="song-li">
-                            <h3>Song Name</h3>
-                            <p>Artist</p>
-                        </li>
-                        <li className="song-li">
-                            <h3>Song Name</h3>
-                            <p>Artist</p>
-                        </li>
-                    </ul>
+                    <TrackList data={props.data} />
                 </section>
-                <button className="btn">Create Playlist</button>
-                <h3>[PLAYLIST NAME] created</h3>
-                <button className="btn">Open Playlist in Spotify</button>
+                <button className="btn" id="fav-playlist-create-btn">Create Playlist</button>
+                <h3 id="playlist-created-text" className="hidden">Playlist created</h3>
+                <a href={props.link} target='_blank' id="open-playlist-btn" className="hidden">
+                    <button className="btn">Open Playlist in Spotify</button>
+                </a>
             </main>
         </div>
     )

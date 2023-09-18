@@ -117,3 +117,13 @@ export function setTrackListAlbumID(value) {
 export function getTrackListAlbumID() {
     return trackListAlbumID
 }
+
+let playlistURL = null
+
+export function setPlaylistURL(value) {
+    playlistURL = value
+}
+
+export function getPlaylistURL() {
+    return playlistURL
+}

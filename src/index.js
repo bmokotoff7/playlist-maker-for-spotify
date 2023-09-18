@@ -23,8 +23,7 @@ document.addEventListener('click', function(e) {
 
     // Handles clicks on the Create Artist Playlist button
     else if (e.target.id === 'create-artist-playlist-btn') {
-        dataModule.setArtistSearchResults(null)
-        dataModule.setSelectedArtistName(null)
+        resetCreateArtistPlaylist()
         renderApp()
     }
     
@@ -83,6 +82,41 @@ document.addEventListener('click', function(e) {
         getSelectedAlbums()
         const playlistName = `${dataModule.getSelectedArtistName()} Album Mix`
         apiModule.createArtistPlaylist(playlistName)
+        document.getElementById('back-btn').classList.toggle('hidden')
+        document.getElementById('album-list-section').classList.toggle('hidden')
+        document.getElementById('ap-playlist-create-btn').classList.toggle('hidden')
+        document.getElementById('playlist-created-text').classList.toggle('hidden')
+        document.getElementById('open-playlist-btn').classList.toggle('hidden')
+    }
+
+    // Handles clicks on the "Get My Recent Rewind" button
+    else if (e.target.id === 'recent-rewind-btn') {
+        resetRecentRewind()
+        apiModule.getTopItemsRequest('short_term', 30)
+    }
+
+    // Handles clicks on the "Create Playlist" button on the recent rewind page (adapt for all pages w/ data attributes)
+    else if (e.target.id === 'rr-playlist-create-btn') {
+        apiModule.createRecentRewindPlaylist()
+        document.getElementById('rr-tracks-section').classList.toggle('hidden')
+        document.getElementById('rr-playlist-create-btn').classList.toggle('hidden')
+        document.getElementById('playlist-created-text').classList.toggle('hidden')
+        document.getElementById('open-playlist-btn').classList.toggle('hidden')
+    }
+
+    // Handles clicks on the "Get My All Time Favorites" button
+    else if (e.target.id === 'favorites-btn') {
+        resetFavorites()
+        apiModule.getTopItemsRequest('long_term', 50)
+    }
+
+    // Handles clicks on the "Create Playlist" button on the favorites page (adapt for all pages w/ data attributes)
+    else if (e.target.id === 'fav-playlist-create-btn') {
+        apiModule.createFavoritesPlaylist()
+        document.getElementById('fav-tracks-section').classList.toggle('hidden')
+        document.getElementById('fav-playlist-create-btn').classList.toggle('hidden')
+        document.getElementById('playlist-created-text').classList.toggle('hidden')
+        document.getElementById('open-playlist-btn').classList.toggle('hidden')
     }
 
 })
@@ -103,11 +137,20 @@ export function getCurrentUserProfile(userID) {
 }
 
 function resetCreateArtistPlaylist() {
-    // Clear HTML elements
-    document.querySelector('#artist-playlist-search-terms').value = ''
-    document.querySelector('#artist-search-results').innerHTML = ''
-    document.querySelector('#album-list').innerHTML = ''
     // Clear stored data
+    dataModule.setArtistSearchResults(null)
+    dataModule.setSelectedArtistName(null)
+    renderApp()
+}
+
+function resetRecentRewind() {
+    dataModule.setTopItems(null)
+    renderApp()
+}
+
+function resetFavorites() {
+    dataModule.setTopItems(null)
+    renderApp()
 }
 
 // Renders the track list for an album

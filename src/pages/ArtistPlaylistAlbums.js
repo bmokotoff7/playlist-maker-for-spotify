@@ -5,22 +5,24 @@ import AlbumList from "../components/AlbumList";
 import * as dataModule from '../data.js'
 
 export default function ArtistPlaylistAlbums(props) {
+    console.log(props.link)
     return (
         <div>
             <Header />
             <main>
-                <h1>Create Artist Playlist</h1>
-                <Link to='/artistplaylist'>
-                    <button className="btn">Back to Search Results</button>
+                {/* <h1>Create Artist Playlist</h1> */}
+                <Link to='/artistplaylist' id="back-btn">
+                    <button className="btn back-btn">⬅ Back to Search Results</button>
                 </Link>
-                <section className="artist-albums-section">
-                    <h4>{dataModule.getSelectedArtistName()} Albums</h4>
+                <section className="artist-albums-section" id="album-list-section">
+                    <h3>{dataModule.getSelectedArtistName()} Albums</h3>
                     <AlbumList data={props.data}/>
-                    <h4>X Albums Selected</h4>
                 </section>
                 <button className="btn" id="ap-playlist-create-btn">Create Playlist</button>
-                <h3>[PLAYLIST NAME] created</h3>
-                <button className="btn">Open Playlist in Spotify</button>
+                <h3 id="playlist-created-text" className="hidden">Playlist created</h3>
+                <a href={props.link} target='_blank' id="open-playlist-btn" className="hidden">
+                    <button className="btn">Open Playlist in Spotify</button>
+                </a>
             </main>
         </div>
     )

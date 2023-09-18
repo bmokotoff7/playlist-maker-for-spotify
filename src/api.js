@@ -4,8 +4,8 @@ import renderApp from "./main.js"
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
-// const redirectUri = 'https://playlistmakerforspotify.netlify.app/' 
-const redirectUri = 'http://127.0.0.1:5173/home'
+const redirectUri = 'https://playlistmakerforspotify.netlify.app/home' 
+// const redirectUri = 'http://127.0.0.1:5173/home'
 let accessToken = null
 let refreshToken = null
 let userID = localStorage.getItem('userID') ? localStorage.getItem('userID') : null
@@ -283,10 +283,10 @@ function addItemsToPlaylistRequest(playlistID, uris, uriString) {
     handleApiRequest('POST', url + args, true, true, body, addItemsToPlaylistResponse)
 }
 
-export function getTopItemsRequest() {
+export function getTopItemsRequest(timeRange, limit) {
     let type = 'tracks' // type: 'artists', 'tracks'
-    let timeRange = 'short_term' // timeRange: 'short_term', 'medium_term' (default), 'long_term'
-    let limit = 5 // limit: 1-50 (default 20)
+    // timeRange: 'short_term', 'medium_term' (default), 'long_term'
+    // limit: 1-50 (default 20)
     let offset = 0 // offset: default 0
 
     let url = `https://api.spotify.com/v1/me/top/${type}?`
@@ -371,8 +371,17 @@ function addItemsToPlaylistResponse(data) {
 }
 
 function getTopItemsResponse(data) {
-    dataModule.setTopItems(data)
-    script.logTopItems()
+    const tracks = data.items
+    const topItems = tracks.map(function(track) {
+        return {
+            name: track.name,
+            artists: track.artists,
+            uri: track.uri
+        }
+    })
+    dataModule.setTopItems(topItems)
+    console.log(dataModule.getTopItems())
+    renderApp()
 }
 
 // Trial Functions ------------------------------------------------------------------------------------------
@@ -404,8 +413,11 @@ export function createArtistPlaylist(name) {
     }).then(data => {
 
         // Add selected albums to new playlist
+        dataModule.setPlaylistURL(data.external_urls.spotify)
+        renderApp()
         dataModule.setPlaylistID(data.id)
         const albums = dataModule.getSelectedAlbums()
+        console.log(albums)
         albums.forEach(function(album) {
 
             let market = 'US'
@@ -448,8 +460,7 @@ export function createArtistPlaylist(name) {
                     dataModule.appendUriString(`${uri},`)
                 })
                 dataModule.editUriString()
-                addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
-            
+                addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())            
             }).catch(error => {
                 console.error('Error:', error)
             })
@@ -486,8 +497,98 @@ export function createRecentRewindPlaylist() {
         return response.json()
     }).then(data => {
 
+        dataModule.setPlaylistURL(data.external_urls.spotify)
+        renderApp()
         dataModule.setPlaylistID(data.id)
         // Get user's top 30 songs in the last month
+        let type = 'tracks' // type: 'artists', 'tracks'
+        let timeRange = 'short_term' // timeRange: 'short_term', 'medium_term' (default), 'long_term'
+        let limit = 30 // limit: 1-50 (default 20)
+        let offset = 0 // offset: default 0
+
+        let url = `https://api.spotify.com/v1/me/top/${type}?`
+        let args = new URLSearchParams({
+            time_range: timeRange,
+            limit: limit,
+            offset: offset
+        })
+
+        const response = fetch(url + args, {
+            method: 'GET',
+            headers: getHeaders(true, false),
+            body: null
+        }).then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    refreshAccessToken()
+                }
+                else if (response.status === 502 || response.status === 500) {
+                    handleApiRequest(method, url, authorizationHeader, contentTypeHeader, body, callback)
+                }
+                else {
+                    throw new Error(`HTTP status ${response.status}: ${response.statusText}`)
+                }
+            }
+            return response.json()
+        }).then(data => {
+            const tracks = data.items
+            const tracksArray = []
+            tracks.forEach(function(track) {
+                tracksArray.push({
+                    uri: track.uri
+                })
+            })
+            dataModule.setUris([])
+            dataModule.setUriString('')
+            tracksArray.forEach(function(track) {
+                dataModule.pushUri(track.uri)
+                dataModule.appendUriString(`${track.uri},`)
+            })
+            dataModule.editUriString()
+            addItemsToPlaylistRequest(dataModule.getPlaylistID(), dataModule.getUris(), dataModule.getUriString())
+            
+        }).catch(error => {
+            console.error('Error:', error)
+        })
+
+    }).catch(error => {
+        console.error('Error:', error)
+    })    
+    // Create playlist with those songs
+}
+
+
+export function createFavoritesPlaylist() {
+    // Create Playlist
+    let url = `https://api.spotify.com/v1/users/${userID}/playlists`
+    let body = `{
+        "name": "Your All Time Favorites",
+        "description": "Created by Playlist Maker for Spotify",
+        "public": false 
+    }`
+    const response = fetch(url, {
+        method: 'POST',
+        headers: getHeaders(true, true),
+        body: body
+    }).then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                refreshAccessToken()
+            }
+            else if (response.status === 502 || response.status === 500) {
+                handleApiRequest(method, url, authorizationHeader, contentTypeHeader, body, callback)
+            }
+            else {
+                throw new Error(`HTTP status ${response.status}: ${response.statusText}`)
+            }
+        }
+        return response.json()
+    }).then(data => {
+
+        dataModule.setPlaylistURL(data.external_urls.spotify)
+        renderApp()
+        dataModule.setPlaylistID(data.id)
+        // Get user's top 50 songs of all time
         let type = 'tracks' // type: 'artists', 'tracks'
         let timeRange = 'long_term' // timeRange: 'short_term', 'medium_term' (default), 'long_term'
         let limit = 50 // limit: 1-50 (default 20)
@@ -541,14 +642,7 @@ export function createRecentRewindPlaylist() {
     }).catch(error => {
         console.error('Error:', error)
     })
-    
-
-    // Create playlist with those songs
 }
-
-
-
-
 
 export function getUserId() {
     console.log(userID)
