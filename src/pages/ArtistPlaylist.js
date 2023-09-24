@@ -7,7 +7,7 @@ export default function ArtistPlaylist(props) {
         <div>
             <Header />
             <main>
-                <h1>Create Artist Playlist</h1>
+                <h1 className="ap-page-heading">Create Artist Playlist</h1>
                 <section className="search-box-section">
                     <input className="search-box" type="text" id="artist-playlist-search-terms" placeholder="Search for an artist..." />
                     <button className="btn search-btn" id="artist-search-btn">

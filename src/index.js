@@ -9,11 +9,19 @@ document.addEventListener('click', function(e) {
         if (!JSON.parse(localStorage.getItem('isLoggedIn')) === true) {
             apiModule.requestUserAuthorization()
         }
+        else {
+            apiModule.refreshAccessToken()
+        }
     }
 
     // Handles clicks on the profile button
     else if (e.target.id === 'profile-btn') {
-        document.getElementById('logout-modal').classList.toggle('hidden')
+        if (document.getElementById('logout-modal').style.display === 'flex') {
+            document.getElementById('logout-modal').style.display = 'none'
+        }
+        else {
+            document.getElementById('logout-modal').style.display = 'flex'
+        }
     }
    
     // Handles clicks on the logout button
@@ -43,6 +51,7 @@ document.addEventListener('click', function(e) {
         console.log(selectedArtist.name)
         dataModule.setSelectedArtistName(selectedArtist.name)
         renderApp()
+        dataModule.setArtistAlbums([])
         apiModule.getArtistsAlbumsRequest(selectedArtist.id)
     }
 
@@ -57,6 +66,34 @@ document.addEventListener('click', function(e) {
         else {
             selectBtn.classList.toggle('selected')
             selectBtn.textContent = "Selected"
+        }
+    }
+
+    else if (e.target.id === 'select-all-btn') {
+        const selectAllBtn = document.getElementById('select-all-btn')
+        if (selectAllBtn.classList.contains('all-selected')) {
+            selectAllBtn.classList.toggle('all-selected')
+            selectAllBtn.textContent = "Select All Albums"
+
+            const albums = Array.from(document.querySelectorAll('[data-album-id]')).map(function(album) {
+                const selectBtn = document.querySelector(`[data-album-id='${album.dataset.albumId}']`)
+                if (selectBtn.classList.contains('selected')) {
+                    selectBtn.classList.toggle('selected')
+                    selectBtn.textContent = "Select"
+                }
+            })
+        }
+        else {
+            selectAllBtn.classList.toggle('all-selected')
+            selectAllBtn.textContent = "Deselect All Albums"
+
+            const albums = Array.from(document.querySelectorAll('[data-album-id]')).map(function(album) {
+                const selectBtn = document.querySelector(`[data-album-id='${album.dataset.albumId}']`)
+                if (!(selectBtn.classList.contains('selected'))) {
+                    selectBtn.classList.toggle('selected')
+                    selectBtn.textContent = "Selected"
+                }
+            })
         }
     }
 
@@ -119,6 +156,18 @@ document.addEventListener('click', function(e) {
         document.getElementById('open-playlist-btn').classList.toggle('hidden')
     }
 
+})
+
+// Adds enter key functionality for executing searches
+document.addEventListener('keypress', function(e) {
+    if (document.activeElement === document.getElementById('artist-playlist-search-terms')) {
+        if (e.key === 'Enter') {
+            const searchTerms = document.querySelector('#artist-playlist-search-terms').value
+            if (searchTerms) {
+                apiModule.searchForArtistsRequest(searchTerms)
+            }
+        }
+    }
 })
 
 window.addEventListener('load', onPageLoad)

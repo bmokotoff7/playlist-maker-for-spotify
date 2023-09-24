@@ -4,8 +4,8 @@ import renderApp from "./main.js"
 
 // Authorization and User Data ------------------------------------------------------------------------------
 const clientId = '26504850eab146ce841f5b9f1c03db49'
-const redirectUri = 'https://playlistmakerforspotify.netlify.app/home' 
-// const redirectUri = 'http://127.0.0.1:5173/home'
+// const redirectUri = 'https://playlistmakerforspotify.netlify.app/home' 
+const redirectUri = 'http://127.0.0.1:5173/home'
 let accessToken = null
 let refreshToken = null
 let userID = localStorage.getItem('userID') ? localStorage.getItem('userID') : null
@@ -66,7 +66,7 @@ function requestAccessToken(code) {
     handleAuthorizationApiRequest(body)
 }
 
-function refreshAccessToken() {
+export function refreshAccessToken() {
     let body = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: localStorage.getItem('refreshToken'),
@@ -347,7 +347,8 @@ function getArtistsAlbumsResponse(data) {
             uri: album.uri
         })
     })
-    dataModule.setArtistAlbums(albumsArray)
+    dataModule.setArtistAlbums([...dataModule.getArtistAlbums(), ...albumsArray])
+    console.log(dataModule.getArtistAlbums())
     renderApp()
 }
 

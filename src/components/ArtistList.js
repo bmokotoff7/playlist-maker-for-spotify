@@ -6,7 +6,7 @@ export default function ArtistList(props) {
     if (data) {
         return (
             <div>
-                <h4>Search Results</h4>
+                {/* <h4>Search Results</h4> */}
                 <ul className="item-list">
                     {data && data.map(artist => {
                         return <ArtistListItem name={artist.name} id={artist.id} imageUrl={artist.imageUrl}/>

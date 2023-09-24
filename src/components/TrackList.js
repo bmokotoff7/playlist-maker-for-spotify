@@ -7,7 +7,7 @@ export default function TrackList(props) {
     if (data) {
         console.log(data)
         return (
-            <ol className="ol-item-list">
+            <ol className="ol-item-list track-list">
                 {data && data.map(track => {
                     const artists = track.artists.map(function(artist) {
                         return artist.name

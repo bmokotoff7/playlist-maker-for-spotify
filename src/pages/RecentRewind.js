@@ -8,7 +8,7 @@ export default function RecentRewind(props) {
         <div>
             <Header />
             <main>
-                <h1 id="rr-heading">Recent Rewind</h1>
+                <h1 className="page-heading" id="rr-heading">Recent Rewind</h1>
                 {/* <section className="playlist-setup"> */}
                     {/* <h4>Select number of tracks</h4> */}
                     {/* <div className="select-playlist-size-btns"> */}
@@ -20,7 +20,7 @@ export default function RecentRewind(props) {
                 {/* </section> */}
                 
                 <section className="artist-albums-section" id="rr-tracks-section">
-                    <h4>Playlist Tracks</h4>
+                    <h4 className="list-title">Playlist Tracks</h4>
                     <TrackList data={props.data} />
                 </section>
                 <button className="btn" id="rr-playlist-create-btn">Create Playlist</button>

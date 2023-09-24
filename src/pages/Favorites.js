@@ -7,7 +7,7 @@ export default function Favorites(props) {
         <div>
             <Header />
             <main>
-                <h1>All Time Favorites</h1>
+                <h1 className="page-heading">All Time Favorites</h1>
                 {/* <section className="playlist-setup"> */}
                     {/* <h4>Select number of tracks</h4> */}
                     {/* <div className="select-playlist-size-btns"> */}
@@ -19,7 +19,7 @@ export default function Favorites(props) {
                 {/* </section> */}
                 
                 <section classNameName="artist-albums-section" id="fav-tracks-section">
-                    <h4>Playlist Tracks</h4>
+                    <h4 className="list-title">Playlist Tracks</h4>
                     <TrackList data={props.data} />
                 </section>
                 <button className="btn" id="fav-playlist-create-btn">Create Playlist</button>

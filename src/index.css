@@ -3,15 +3,17 @@ body {
     font-family: 'DM Sans', sans-serif;
     text-align: center;
     background: #242424 url(images/login-background.jpg);
+    background-color: #242424;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    backdrop-filter: brightness(15%);
-    -webkit-backdrop-filter: brightness(15%);
+    backdrop-filter: brightness(20%);
+    -webkit-backdrop-filter: brightness(20%);
     color: white;
     height: auto;
     max-height: 100%;
-    overflow: auto;
+    overflow: hidden;
+    touch-action: none;
 }
 
 header {
@@ -51,12 +53,12 @@ header h1 {
 .header-btn {
     font-size: 0.8rem;
     border: none;
-    background-color: #4D4D4D;
+    background-color: #242424;
     color: white;
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
     border-radius: 0.25em;
-    padding: 0.5em 0.75em;
+    padding: 0.5em 0;
     text-transform: uppercase;
     letter-spacing: 0.04rem;
     cursor: pointer;
@@ -67,7 +69,6 @@ header h1 {
 }
 
 .header-btn:hover {
-    background-color: #5d5d5d;
 }
 
 /* Small logo for mobile */
@@ -79,11 +80,10 @@ header h1 {
     padding: 0.25em;
     border-radius: 0.25em;
     margin-left: 0;
-    /* font-size: 1.25rem; */
 }
 
 main {
-    padding: 2em 0;
+    padding: 1.5em 0;
 }
 
 .btn {
@@ -94,19 +94,19 @@ main {
     font-size: 1rem;
     font-weight: 500;
     border-radius: 0.25em;
-    padding: 0.75em 1.5em;
+    padding: 1em 1.5em;
     text-transform: uppercase;
     letter-spacing: 0.04rem;
     cursor: pointer;
+    width: 80%;
 }
 
 .btn:hover {
-    font-weight: 700;
 }
 
 .video-section {
-    max-width: 800px;
-    margin: 100px auto;
+    width: 90%;
+    margin: 3em auto 0;
     text-align: center;
     font-style: italic;
 }
@@ -114,7 +114,6 @@ main {
 .homepage-btns {
     display: flex;
     flex-direction: column;
-    width: fit-content;
     margin: 0 auto;
 }
 
@@ -123,11 +122,14 @@ main {
 }
 
 .search-box-section {
-    width: fit-content;
+    width: 90%;
     margin: 0 auto;
     background-color: #4D4D4D;
-    padding: 0.75em 1.5em;
+    padding: 0.5em 1em;
     border-radius: 0.25em;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
 }
 
 .search-box {
@@ -135,10 +137,11 @@ main {
     background-color: #4D4D4D;
     color: white;
     font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 1.25rem;
-    padding: 0.5em;
-    width: 400px;
+    padding: 0.25em 0;
+    width: 100%;
+    outline: none;
 }
 
 .search-btn {
@@ -146,11 +149,11 @@ main {
     border-radius: 50%;
     color: white;
     padding: 0.75em;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    width: 2em;
 }
 
 .search-btn:hover {
-    background-color: #242424;
 }
 
 .fa-magnifying-glass {
@@ -163,38 +166,65 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: fit-content;
-    margin: 1em auto 2em;
+    width: 90%;
+    box-sizing: border-box;
+    margin: 1em auto;
     background-color: #242424;
     border-radius: 0.25em;
     height: auto;
-    max-height: calc(100% - 68.8px - 320px);
+    max-height: calc(100% - 12em);
     overflow: scroll;
+}
+
+.album-list {
+    max-height: calc(100% - 18em);
 }
 
 .ol-item-list {
     padding: 0.75em;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: fit-content;
+    align-items: start;
+    width: 90%;
+    box-sizing: border-box;
     margin: 1em auto 2em;
     background-color: #242424;
     border-radius: 0.25em;
     height: auto;
-    max-height: calc(100% - 68.8px - 320px);
+    max-height: calc(100% - 12em);
     overflow: scroll;
+}
+
+.track-list {
+    padding-left: 1.5em;
+    max-height: calc(100% - 18em);
+}
+
+.track-list li {
+}
+
+.track-list li h3 {
+    font-weight: 600;
+    margin: 0;
+}
+
+.track-list li p {
+    margin: 0.5em auto 0;
 }
 
 .item-list li, .ol-item-list li {
     border-bottom: 1px solid #4D4D4D;
-    width: 600px;
+    width: 96%;
     text-align: left;
-    padding: 1em;
+    padding: 0.75em;
+    font-size: 0.75rem;
 }
 
 .ol-item-list li {
-    margin: auto 2em;
+    padding-left: 1em;
+    width: 90%;
+    margin: auto;
+    margin-left: 0.8em;
 }
 
 .artist-li {
@@ -206,13 +236,11 @@ main {
 }
 
 .artist-li:hover, .artist-li:hover .artist-li-name {
-    color: #16db65;
-    cursor: pointer;
 }
 
 .artist-img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     padding-right: 1em;
 }
 
@@ -221,19 +249,18 @@ main {
 }
 
 .item-list li h3 {
+    font-weight: 600;
     padding: 0;
     margin: 0;
 }
 
 .album-li {
-    /* border: 1px solid red; */
     display: grid;
     grid-template: auto auto/ auto auto;
     align-items: center;
 }
 
 .album-text {
-    /* border: 1px solid red; */
     margin-right: 1em;
 }
 
@@ -243,24 +270,35 @@ main {
     align-self: center;
     width: fit-content;
     margin-left: auto;
-    padding: 0.75em;
+    padding: 0.5em;
     letter-spacing: 0.02rem;
-    text-transform: none
+    text-transform: none;
+    font-size: 0.75rem;
 }
 
 .album-select-btn:hover {
-    font-weight: 500;
-    background-color: #5d5d5d;
 }
 
 .show-songs-btn {
-    background: none;
+    background: #4D4D4D;
     color: white;
-    padding: 0.5em 0 0;
+    padding: 0.25em 0.5em;
+    margin-top: 0.5em;
+    text-align: left;
+    width: fit-content;
+    font-size: 0.75rem;
+}
+
+.album-track-list {
+    margin-top: 0.5em;
+    margin-left: 0;
+    padding-left: 1em;
+    width: 100%;
 }
 
 .album-track-list li {
     width: 100%;
+    padding-left: 0.75em;
 }
 
 .hidden {
@@ -274,45 +312,39 @@ main {
 
 .fa-user {
     border-radius: 50%;
-    padding: 0.5rem;
     background: #242424;
-    margin-right: 0.5em;
-    font-size: 1rem;
+    margin-right: 0.25em;
+    font-size: 1.25rem;
 }
 
 .fa-house {
-    padding: 0.5rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
+    margin-left: 0.25em;
 }
-
-/* .login-page {
-    background-image: url(images/login-background.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    backdrop-filter: brightness(20%);
-    -webkit-backdrop-filter: brightness(20%);
-} */
 
 .logout-modal {
     background-color: #242424;
     border-radius: 0.25em;
     position: absolute;
-    top: 65px;
+    top: 52px;
     right: 0;
-    margin-right: 0.75em;
     padding: 0.5em;
+    text-align: right;
+    display: none;
+    flex-direction: column;
 }
 
 .logout-modal .btn {
     background-color: #242424;
     color: white;
     font-size: 0.9rem;
-}
-
-.logout-modal .btn:hover {
-    background-color: #4D4D4D;
-    font-weight: 500;
+    width: 100%;
+    padding: 0.25em;
+    padding-top: 0.75em;
+    border-radius: 0;
+    border-top: 1px solid #4D4D4D;
+    text-align: right;
+    font-weight: 600;
 }
 
 #profile-btn {
@@ -324,14 +356,389 @@ main {
     margin: 0;
 }
 
-.back-btn {
+.artist-albums-section {
+    position: relative;
+}
+
+.back-btn, .select-all-btn {
     background-color: #4D4D4D;
     color: white;
-    padding: 0.5em 0.75em;
+    padding: 0.25em 0.5em;
+    font-size: 0.75rem;
     text-transform: none;
+    width: fit-content;
+}
+
+.back-btn {
+    position: absolute;
+    top: 80;
+    left: 10;
 }
 
 .back-btn:hover {
     background-color: #5d5d5d;
     font-weight: 500;
+}
+
+.header-username-text,
+.ap-page-heading {
+    display: none !important;
+}
+
+.page-heading {
+    margin: 0 auto;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.list-title {
+    margin: 0.75em 0;
+}
+
+.modal-username {
+    margin: 0.25em 0 0.25em auto;
+}
+
+body, html {
+    overflow-x: hidden;
+}
+
+@media only screen and (min-width: 800px) {
+    body {
+        margin: 0;
+        font-family: 'DM Sans', sans-serif;
+        text-align: center;
+        background: #242424 url(images/login-background.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        backdrop-filter: brightness(15%);
+        -webkit-backdrop-filter: brightness(15%);
+        color: white;
+        height: auto;
+        max-height: 100%;
+        overflow: auto;
+    }
+    
+    header {
+        color: white;
+        background-color: #242424;
+        text-align: center;
+        padding: 0.75em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+        padding: 0;
+        font-weight: 600;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    
+    .main-header {
+        position: relative;
+    
+    }
+    
+    .main-header h1 {
+        font-size: 1.5rem;
+        padding: 0;
+        font-weight: 600;
+        width: fit-content;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+    }
+    
+    .header-btn {
+        font-size: 0.8rem;
+        border: none;
+        background-color: #4D4D4D;
+        color: white;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        border-radius: 0.25em;
+        padding: 0.5em 0.75em;
+        text-transform: uppercase;
+        letter-spacing: 0.04rem;
+        cursor: pointer;
+    }
+    
+    #profile-btn {
+        text-transform: none;
+    }
+    
+    .header-btn:hover {
+        background-color: #5d5d5d;
+    }
+    
+    /* Small logo for mobile */
+    .header-logo {
+        color: white;
+        background-color: #4D4D4D;
+        width: fit-content;
+        margin: 0 auto;
+        padding: 0.25em;
+        border-radius: 0.25em;
+        margin-left: 0;
+        /* font-size: 1.25rem; */
+    }
+    
+    main {
+        padding: 2em 0;
+    }
+    
+    .btn {
+        border: none;
+        background-color: #16db65;
+        color: #242424;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 0.25em;
+        padding: 0.75em 1.5em;
+        text-transform: uppercase;
+        letter-spacing: 0.04rem;
+        cursor: pointer;
+    }
+    
+    .btn:hover {
+        font-weight: 700;
+    }
+    
+    .video-section {
+        max-width: 800px;
+        margin: 100px auto;
+        text-align: center;
+        font-style: italic;
+    }
+    
+    .homepage-btns {
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    
+    .homepage-btns .btn {
+        margin-bottom: 2em;
+    }
+    
+    .search-box-section {
+        width: fit-content;
+        margin: 0 auto;
+        background-color: #4D4D4D;
+        padding: 0.75em 1.5em;
+        border-radius: 0.25em;
+    }
+    
+    .search-box {
+        border: none;
+        background-color: #4D4D4D;
+        color: white;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        font-size: 1.25rem;
+        padding: 0.5em;
+        width: 400px;
+    }
+    
+    .search-btn {
+        background-color: #4D4D4D;
+        border-radius: 50%;
+        color: white;
+        padding: 0.75em;
+        font-size: 1.2rem;
+    }
+    
+    .search-btn:hover {
+        background-color: #242424;
+    }
+    
+    .fa-magnifying-glass {
+        color: white;
+    }
+    
+    .item-list {
+        list-style: none;
+        padding: 0.75em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: fit-content;
+        margin: 1em auto 2em;
+        background-color: #242424;
+        border-radius: 0.25em;
+        height: auto;
+        max-height: calc(100% - 68.8px - 320px);
+        overflow: scroll;
+    }
+    
+    .ol-item-list {
+        padding: 0.75em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: fit-content;
+        margin: 1em auto 2em;
+        background-color: #242424;
+        border-radius: 0.25em;
+        height: auto;
+        max-height: calc(100% - 68.8px - 320px);
+        overflow: scroll;
+    }
+    
+    .item-list li, .ol-item-list li {
+        border-bottom: 1px solid #4D4D4D;
+        width: 600px;
+        text-align: left;
+        padding: 1em;
+    }
+    
+    .ol-item-list li {
+        margin: auto 2em;
+    }
+    
+    .artist-li {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .artist-li:hover, .artist-li:hover .artist-li-name {
+        color: #16db65;
+        cursor: pointer;
+    }
+    
+    .artist-img {
+        width: 80px;
+        height: 80px;
+        padding-right: 1em;
+    }
+    
+    .item-list li:last-child, .ol-item-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .item-list li h3 {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .album-li {
+        /* border: 1px solid red; */
+        display: grid;
+        grid-template: auto auto/ auto auto;
+        align-items: center;
+    }
+    
+    .album-text {
+        /* border: 1px solid red; */
+        margin-right: 1em;
+    }
+    
+    .album-select-btn {
+        background-color: #4D4D4D;
+        color: white;
+        align-self: center;
+        width: fit-content;
+        margin-left: auto;
+        padding: 0.75em;
+        letter-spacing: 0.02rem;
+        text-transform: none
+    }
+    
+    .album-select-btn:hover {
+        font-weight: 500;
+        background-color: #5d5d5d;
+    }
+    
+    .show-songs-btn {
+        background: none;
+        color: white;
+        padding: 0.5em 0 0;
+    }
+    
+    .album-track-list li {
+        width: 100%;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .selected, .selected:hover {
+        background-color: #16db65;
+        color: #242424;
+    }
+    
+    .fa-user {
+        border-radius: 50%;
+        padding: 0.5rem;
+        background: #242424;
+        margin-right: 0.5em;
+        font-size: 1rem;
+    }
+    
+    .fa-house {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    /* .login-page {
+        background-image: url(images/login-background.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        backdrop-filter: brightness(20%);
+        -webkit-backdrop-filter: brightness(20%);
+    } */
+    
+    .logout-modal {
+        background-color: #242424;
+        border-radius: 0.25em;
+        position: absolute;
+        top: 65px;
+        right: 0;
+        margin-right: 0.75em;
+        padding: 0.5em;
+    }
+    
+    .logout-modal .btn {
+        background-color: #242424;
+        color: white;
+        font-size: 0.9rem;
+    }
+    
+    .logout-modal .btn:hover {
+        background-color: #4D4D4D;
+        font-weight: 500;
+    }
+    
+    #profile-btn {
+        display: flex;
+        align-items: center;
+    }
+    
+    #profile-btn p {
+        margin: 0;
+    }
+    
+    .back-btn {
+        background-color: #4D4D4D;
+        color: white;
+        padding: 0.5em 0.75em;
+        text-transform: none;
+    }
+    
+    .back-btn:hover {
+        background-color: #5d5d5d;
+        font-weight: 500;
+    }
 }

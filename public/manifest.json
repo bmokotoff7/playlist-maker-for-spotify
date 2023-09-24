@@ -1,0 +1,7 @@
+{
+    "name":"Playlist Maker for Spotify",
+    "short_name":"PM for Spotify",
+    "theme_color":"#242424",
+    "background_color":"#242424",
+    "display":"standalone"
+}
