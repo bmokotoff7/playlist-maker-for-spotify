@@ -10,7 +10,7 @@ export default function Header() {
                     <i className="fa-solid fa-house"></i>                
                 </button>
             </Link>
-            <h1>PM for Spotify</h1>
+            <h1><span className="header-logo">PM</span> for Spotify</h1>
             <button className="header-btn" id="profile-btn">
                 <i className="fa-solid fa-user" id="profile-btn"></i>
                 <p className="header-username-text" id="profile-btn" data-display-name="">{localStorage.getItem('displayName')}</p>

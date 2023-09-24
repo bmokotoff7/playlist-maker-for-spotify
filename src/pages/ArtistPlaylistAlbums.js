@@ -10,12 +10,11 @@ export default function ArtistPlaylistAlbums(props) {
         <div>
             <Header />
             <main>
-                {/* <h1>Create Artist Playlist</h1> */}
                 <Link to='/artistplaylist' id="back-btn">
                     <button className="btn back-btn">⬅ Back</button>
                 </Link>
                 <section className="artist-albums-section" id="album-list-section">
-                    <h3>{dataModule.getSelectedArtistName()} Albums</h3>
+                    <h2>{dataModule.getSelectedArtistName()} Albums</h2>
                     <button className="btn select-all-btn" id="select-all-btn">Select All Albums</button>
                     <AlbumList data={props.data}/>
                 </section>
